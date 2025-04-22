@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with matrix effect -->
+  <rect width="512" height="512" fill="#1A1A1A"/>
+  <g opacity="0.1" fill="#00FF00">
+    <!-- Matrix rain effect -->
+    <text font-family="monospace" font-size="10">
+      <tspan x="20" y="40">01100110 01100001</tspan>
+      <tspan x="120" y="80">01110110 01100101</tspan>
+      <tspan x="220" y="120">01101100 01100001</tspan>
+      <tspan x="60" y="160">01101000 01100001</tspan>
+      <tspan x="160" y="200">01100011 01101011</tspan>
+      <tspan x="260" y="240">01100101 01110010</tspan>
+    </text>
+  </g>
+
+  <!-- Complex Favela Buildings -->
+  <g>
+    <!-- Base buildings with detailed architecture -->
+    <path d="M80 416V256L144 192V416H80Z" fill="#1A1A1A" stroke="#00FF00" stroke-width="2"/>
+    <path d="M144 416V224L208 160V416H144Z" fill="#1A1A1A" stroke="#00FF00" stroke-width="2"/>
+    <path d="M208 416V192L272 128V416H208Z" fill="#1A1A1A" stroke="#00FF00" stroke-width="2"/>
+    <path d="M272 416V160L336 96V416H272Z" fill="#1A1A1A" stroke="#00FF00" stroke-width="2"/>
+    <path d="M336 416V128L400 64V416H336Z" fill="#1A1A1A" stroke="#00FF00" stroke-width="2"/>
+    <path d="M400 416V96L464 32V416H400Z" fill="#1A1A1A" stroke="#00FF00" stroke-width="2"/>
+
+    <!-- Detailed architectural elements -->
+    <g stroke="#00FF00" stroke-width="1" opacity="0.6">
+      <!-- Antennas -->
+      <path d="M120 192V160M140 160V128M160 128V96" />
+      <path d="M280 128V96M300 96V64M320 64V32" />
+      <path d="M400 96V64M420 64V32M440 32V0" />
+      
+      <!-- Satellite dishes -->
+      <circle cx="120" cy="160" r="8" fill="none"/>
+      <circle cx="280" cy="96" r="8" fill="none"/>
+      <circle cx="400" cy="64" r="8" fill="none"/>
+    </g>
+
+    <!-- Windows with dynamic lighting -->
+    <g>
+      <rect x="96" y="280" width="16" height="16" fill="#00FF00" opacity="0.8">
+        <animate attributeName="opacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="112" y="320" width="16" height="16" fill="#00FF00" opacity="0.6">
+        <animate attributeName="opacity" values="0.2;0.6;0.2" dur="3s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="160" y="240" width="16" height="16" fill="#00FF00" opacity="0.7">
+        <animate attributeName="opacity" values="0.4;0.7;0.4" dur="5s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+  </g>
+
+  <!-- Circuit Network Overlay -->
+  <g stroke="#00FF00" stroke-width="1" opacity="0.4">
+    <!-- Complex circuit paths -->
+    <path d="M80 256H464" />
+    <path d="M144 224H400" />
+    <path d="M208 192H464" />
+    <path d="M80 288H464" />
+    <path d="M144 320H400" />
+    
+    <!-- Circuit nodes -->
+    <g fill="#00FF00">
+      <circle cx="80" cy="256" r="3"/>
+      <circle cx="144" cy="224" r="3"/>
+      <circle cx="208" cy="192" r="3"/>
+      <circle cx="272" cy="160" r="3"/>
+      <circle cx="336" cy="128" r="3"/>
+      <circle cx="400" cy="96" r="3"/>
+      <circle cx="464" cy="64" r="3"/>
+    </g>
+  </g>
+
+  <!-- Community Connection Elements -->
+  <g stroke="#00FF00" stroke-width="1.5" opacity="0.5">
+    <!-- Network connections -->
+    <path d="M80 256C80 356 464 356 464 256" fill="none">
+      <animate attributeName="d" 
+        values="M80 256C80 356 464 356 464 256;M80 256C80 306 464 306 464 256;M80 256C80 356 464 356 464 256" 
+        dur="8s" repeatCount="indefinite"/>
+    </path>
+    <path d="M144 224C144 324 400 324 400 224" fill="none">
+      <animate attributeName="d" 
+        values="M144 224C144 324 400 324 400 224;M144 224C144 274 400 274 400 224;M144 224C144 324 400 324 400 224" 
+        dur="6s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Dynamic Data Flow -->
+  <g>
+    <!-- Data packets -->
+    <circle cx="80" cy="256" r="4" fill="#00FF00">
+      <animate attributeName="cx" values="80;464;80" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.3;1" dur="10s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="144" cy="224" r="4" fill="#00FF00">
+      <animate attributeName="cx" values="144;400;144" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.3;1" dur="8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Hacker Elements -->
+  <g opacity="0.15" fill="#00FF00" font-family="monospace" font-size="8">
+    <!-- Code snippets -->
+    <text x="100" y="300">sudo nmap -sS</text>
+    <text x="160" y="260">./exploit.py</text>
+    <text x="220" y="220">ssh root@</text>
+    <text x="280" y="180">chmod +x</text>
+    <text x="340" y="140">ping -c 4</text>
+  </g>
+
+  <!-- Interactive Elements -->
+  <g>
+    <!-- Pulse effects -->
+    <circle cx="256" cy="256" r="4" fill="#00FF00">
+      <animate attributeName="r" values="4;20;4" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0;1" dur="4s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

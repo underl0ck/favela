@@ -1,0 +1,83 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BlogCard from '../components/BlogCard.astro';
+import Card from '../components/Card.astro';
+import Image from '../components/Image.astro';
+import LoadingSpinner from '../components/LoadingSpinner.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const stats = [
+  { number: '100+', label: 'Alunos Formados', description: 'em cibersegurança' },
+  { number: '85%', label: 'Taxa de Empregabilidade', description: 'dos nossos alunos' },
+  { number: '20+', label: 'Mentores Ativos', description: 'profissionais voluntários' }
+];
+---
+
+<Layout>
+  <!-- Hero Section -->
+  <section class="text-center mb-20">
+    <div class="relative inline-block">
+      <Image 
+        src="/favela-hacker-logo.svg" 
+        alt="Favela Hacker Logo" 
+        className="w-48 h-48 mb-8 glow-effect"
+      />
+    </div>
+    <h1 class="glitch-text text-terminal-green font-mono text-5xl md:text-6xl font-bold mb-6">
+      FAVELA HACKER
+    </h1>
+    <p class="text-xl md:text-2xl max-w-3xl mx-auto opacity-90">
+      Transformando vidas através da tecnologia e cibersegurança nas comunidades
+    </p>
+  </section>
+
+  <!-- Impact Stats -->
+  <section class="grid md:grid-cols-3 gap-8 mb-20">
+    {stats.map(stat => (
+      <Card title={stat.number} className="text-center">
+        <div class="text-lg">{stat.label}</div>
+        <div class="text-sm opacity-75">{stat.description}</div>
+      </Card>
+    ))}
+  </section>
+
+  <!-- Latest Posts -->
+  <section class="mb-20">
+    <h2 class="text-terminal-green font-mono text-3xl mb-8">Últimos Artigos</h2>
+    {posts.length === 0 ? (
+      <div class="flex flex-col items-center justify-center py-12">
+        <LoadingSpinner size="lg" />
+        <p class="mt-4 text-terminal-green">Carregando posts...</p>
+      </div>
+    ) : (
+      <div class="grid md:grid-cols-2 gap-8">
+        {posts.slice(0, 4).map((post) => (
+          <BlogCard post={post} />
+        ))}
+      </div>
+    )}
+  </section>
+
+  <!-- CTA Section -->
+  <section class="text-center">
+    <h2 class="text-terminal-green font-mono text-3xl mb-6">
+      Faça Parte da Nossa Comunidade
+    </h2>
+    <p class="text-lg mb-8 max-w-2xl mx-auto opacity-90">
+      Seja aluno ou mentor, junte-se a nós na missão de democratizar 
+      o conhecimento em cibersegurança
+    </p>
+    <div class="flex justify-center gap-4">
+      <a href="/inscreva-se" class="button">
+        Quero Aprender
+      </a>
+      <a href="/mentor" class="button bg-transparent border-2 border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-terminal-bg">
+        Quero Ensinar
+      </a>
+    </div>
+  </section>
+</Layout>

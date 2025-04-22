@@ -1,0 +1,42 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Card from '../../components/Card.astro';
+
+const nextSteps = [
+  'Nossa equipe receberá sua mensagem e responderá em até 24 horas úteis',
+  'Verifique seu email para confirmar o recebimento',
+  'Enquanto isso, que tal conhecer mais sobre nosso trabalho no blog?'
+];
+---
+
+<Layout
+  title="Mensagem Enviada - Favela Hacker"
+  description="Sua mensagem foi enviada com sucesso"
+>
+  <div class="max-w-2xl mx-auto text-center">
+    <div class="mb-8">
+      <span class="text-6xl">✨</span>
+      <h1 class="text-3xl font-mono text-terminal-green mt-4">Mensagem Enviada!</h1>
+      <p class="text-lg mt-4 opacity-80">
+        Obrigado por entrar em contato com o Favela Hacker
+      </p>
+    </div>
+
+    <Card title="Próximos Passos" className="mb-8">
+      <ul class="space-y-4">
+        {nextSteps.map(step => (
+          <li>• {step}</li>
+        ))}
+      </ul>
+    </Card>
+
+    <div class="flex justify-center gap-4">
+      <a href="/blog" class="button">
+        Visitar Blog
+      </a>
+      <a href="/" class="button bg-transparent border-2 border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-terminal-bg">
+        Voltar ao Início
+      </a>
+    </div>
+  </div>
+</Layout>

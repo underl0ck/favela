@@ -1,0 +1,249 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Image from '../components/Image.astro';
+
+const contactInfo = [
+  {
+    title: 'Localização',
+    items: [
+      'São Paulo, SP',
+      'Complexo do Alemão, RJ',
+      'Heliópolis, SP'
+    ]
+  },
+  {
+    title: 'Contato Direto',
+    items: [
+      'Email: contato@favelahacker.org',
+      'WhatsApp: (11) 99999-9999',
+      'Telegram: @favelahacker'
+    ]
+  }
+];
+
+const socialLinks = [
+  { name: 'GitHub', url: 'https://github.com/favelahacker' },
+  { name: 'Twitter', url: 'https://twitter.com/favelahacker' },
+  { name: 'LinkedIn', url: 'https://linkedin.com/company/favelahacker' },
+  { name: 'Instagram', url: 'https://instagram.com/favelahacker' }
+];
+---
+
+<Layout
+  title="Contato - Favela Hacker"
+  description="Entre em contato com a equipe do Favela Hacker"
+>
+  <div class="max-w-2xl mx-auto">
+    <Image
+      src="https://images.pexels.com/photos/3861972/pexels-photo-3861972.jpeg"
+      alt="Contato Favela Hacker"
+      className="w-full h-64 object-cover rounded-lg mb-8"
+    />
+    
+    <h1 class="text-3xl font-mono text-terminal-green mb-8">Entre em Contato</h1>
+    
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+      {contactInfo.map(section => (
+        <Card title={section.title}>
+          {section.items.map(item => (
+            <p class="mb-2">{item}</p>
+          ))}
+        </Card>
+      ))}
+    </div>
+
+    <form id="contact-form" class="space-y-6">
+      <div>
+        <label class="block text-terminal-green font-mono mb-2" for="name">
+          Nome
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          minlength="2"
+          maxlength="100"
+          class="form-input"
+          placeholder="Seu nome"
+        />
+        <span class="text-red-500 text-sm hidden" data-error="name"></span>
+      </div>
+
+      <div>
+        <label class="block text-terminal-green font-mono mb-2" for="email">
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          maxlength="100"
+          class="form-input"
+          placeholder="seu@email.com"
+        />
+        <span class="text-red-500 text-sm hidden" data-error="email"></span>
+      </div>
+
+      <div>
+        <label class="block text-terminal-green font-mono mb-2" for="subject">
+          Assunto
+        </label>
+        <select id="subject" name="subject" required class="form-input">
+          <option value="">Selecione um assunto</option>
+          <option value="aluno">Quero ser aluno</option>
+          <option value="mentor">Quero ser mentor</option>
+          <option value="parceria">Proposta de parceria</option>
+          <option value="outro">Outro assunto</option>
+        </select>
+        <span class="text-red-500 text-sm hidden" data-error="subject"></span>
+      </div>
+
+      <div>
+        <label class="block text-terminal-green font-mono mb-2" for="message">
+          Mensagem
+        </label>
+        <textarea
+          id="message"
+          name="message"
+          required
+          minlength="10"
+          maxlength="1000"
+          class="form-input form-textarea"
+          placeholder="Sua mensagem"
+        ></textarea>
+        <span class="text-red-500 text-sm hidden" data-error="message"></span>
+        <div class="text-sm text-terminal-green mt-1">
+          <span id="message-length">0</span>/1000 caracteres
+        </div>
+      </div>
+
+      <div id="form-error" class="text-red-500 hidden"></div>
+      <div id="form-success" class="text-terminal-green hidden"></div>
+
+      <div>
+        <button type="submit" class="button" id="submit-button">
+          Enviar Mensagem
+        </button>
+      </div>
+    </form>
+
+    <div class="mt-12">
+      <h2 class="text-2xl font-mono text-terminal-green mb-6">Redes Sociais</h2>
+      <div class="flex gap-6">
+        {socialLinks.map(link => (
+          <a 
+            href={link.url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-terminal-green hover:text-terminal-dark-green"
+          >
+            {link.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+const form = document.getElementById('contact-form') as HTMLFormElement;
+const errorDiv = document.getElementById('form-error') as HTMLDivElement;
+const successDiv = document.getElementById('form-success') as HTMLDivElement;
+const submitButton = document.getElementById('submit-button') as HTMLButtonElement;
+const messageTextarea = document.getElementById('message') as HTMLTextAreaElement;
+const messageLengthDisplay = document.getElementById('message-length') as HTMLSpanElement;
+
+// Character counter
+messageTextarea.addEventListener('input', () => {
+  const length = messageTextarea.value.length;
+  messageLengthDisplay.textContent = length.toString();
+  
+  if (length > 1000) {
+    messageTextarea.value = messageTextarea.value.slice(0, 1000);
+    messageLengthDisplay.textContent = '1000';
+  }
+});
+
+// Clear error message when user starts typing
+form.querySelectorAll('input, textarea, select').forEach(element => {
+  element.addEventListener('input', () => {
+    const errorSpan = form.querySelector(`[data-error="${element.id}"]`);
+    if (errorSpan) {
+      errorSpan.textContent = '';
+      errorSpan.classList.add('hidden');
+    }
+    errorDiv.classList.add('hidden');
+  });
+});
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  // Reset messages
+  errorDiv.classList.add('hidden');
+  successDiv.classList.add('hidden');
+  form.querySelectorAll('[data-error]').forEach(el => {
+    el.textContent = '';
+    el.classList.add('hidden');
+  });
+  
+  // Disable submit button
+  submitButton.disabled = true;
+  submitButton.textContent = 'Enviando...';
+  
+  try {
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      subject: formData.get('subject'),
+      message: formData.get('message')
+    };
+    
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    let result;
+    const responseText = await response.text();
+    
+    try {
+      result = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('Failed to parse response:', responseText);
+      throw new Error('Erro no servidor: resposta inválida');
+    }
+    
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Erro ao enviar mensagem');
+    }
+    
+    // Redirect to success page
+    window.location.href = '/contato/sucesso';
+    
+  } catch (error) {
+    console.error('Form submission error:', error);
+    let errorMessage = 'Erro ao enviar mensagem';
+    
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    
+    // Display the error message
+    errorDiv.textContent = errorMessage;
+    errorDiv.classList.remove('hidden');
+    
+  } finally {
+    // Re-enable submit button
+    submitButton.disabled = false;
+    submitButton.textContent = 'Enviar Mensagem';
+  }
+});
+</script>

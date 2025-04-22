@@ -1,0 +1,138 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Image from '../components/Image.astro';
+
+const stats = [
+  { number: '100+', label: 'Alunos Formados' },
+  { number: '85%', label: 'Taxa de Empregabilidade' },
+  { number: '20+', label: 'Mentores Voluntários' }
+];
+
+const values = [
+  { title: 'Princípios', items: [
+    'Educação acessível e de qualidade',
+    'Ética e responsabilidade',
+    'Inclusão e diversidade',
+    'Aprendizado contínuo'
+  ]},
+  { title: 'Compromissos', items: [
+    'Impacto social positivo',
+    'Transparência nas ações',
+    'Desenvolvimento sustentável',
+    'Fortalecimento da comunidade'
+  ]}
+];
+
+const methodology = [
+  { title: 'Metodologia', items: [
+    'Cursos presenciais e online gratuitos',
+    'Mentoria personalizada',
+    'Laboratórios práticos de cibersegurança',
+    'Preparação para certificações',
+    'Projetos práticos em grupo'
+  ]},
+  { title: 'Estrutura', items: [
+    '6 meses de formação intensiva',
+    'Aulas 3x por semana',
+    'Mentorias semanais',
+    'Workshops com empresas',
+    'Hackathons e desafios práticos'
+  ]}
+];
+---
+
+<Layout 
+  title="Sobre o Favela Hacker"
+  description="Conheça nossa missão de capacitar jovens em comunidades através da tecnologia"
+>
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-12">
+      <Image
+        src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg"
+        alt="Favela Hacker em ação"
+        className="w-full h-64 object-cover rounded-lg mb-8"
+      />
+      <h1 class="text-4xl font-mono text-terminal-green mb-6">Nossa História</h1>
+      <Card title="Sobre Nós">
+        <p class="text-lg">
+          O Favela Hacker nasceu da necessidade de democratizar o conhecimento em cibersegurança
+          e criar oportunidades reais para jovens talentosos de comunidades. Nossa jornada começou
+          em 2023, quando um grupo de profissionais de segurança da informação decidiu compartilhar
+          seu conhecimento com jovens de comunidades que não teriam acesso a essa formação.
+        </p>
+      </Card>
+    </div>
+
+    <section class="mb-12">
+      <h2 class="text-3xl font-mono text-terminal-green mb-6">Nossa Missão</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <Card title="Educação">
+          Proporcionar educação gratuita e de qualidade em cibersegurança para jovens de comunidades
+        </Card>
+        <Card title="Mentoria">
+          Conectar alunos com profissionais experientes que possam guiar seu desenvolvimento
+        </Card>
+        <Card title="Oportunidades">
+          Criar pontes entre nossos alunos e o mercado de trabalho em tecnologia
+        </Card>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-3xl font-mono text-terminal-green mb-6">Como Funcionamos</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        {methodology.map(section => (
+          <Card title={section.title}>
+            <ul class="list-none space-y-2">
+              {section.items.map(item => (
+                <li>• {item}</li>
+              ))}
+            </ul>
+          </Card>
+        ))}
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-3xl font-mono text-terminal-green mb-6">Impacto Social</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        {stats.map(stat => (
+          <Card title={stat.number} className="text-center">
+            <div class="text-lg">{stat.label}</div>
+          </Card>
+        ))}
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-3xl font-mono text-terminal-green mb-6">Nossos Valores</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        {values.map(section => (
+          <Card title={section.title}>
+            <ul class="list-none space-y-2">
+              {section.items.map(item => (
+                <li>• {item}</li>
+              ))}
+            </ul>
+          </Card>
+        ))}
+      </div>
+    </section>
+
+    <section class="text-center">
+      <h2 class="text-3xl font-mono text-terminal-green mb-6">Faça Parte</h2>
+      <p class="text-lg mb-8">
+        Seja como aluno, mentor ou parceiro, você pode fazer parte desta transformação.
+      </p>
+      <div class="flex justify-center gap-4">
+        <a href="/contato" class="button">
+          Entre em Contato
+        </a>
+        <a href="/inscreva-se" class="button bg-transparent border-2 border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-terminal-bg">
+          Inscreva-se
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout>

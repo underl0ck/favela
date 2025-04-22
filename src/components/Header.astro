@@ -1,0 +1,23 @@
+---
+import HeaderLink from './HeaderLink.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<header class="border-b border-terminal-green/30">
+  <nav class="container mx-auto px-4 py-4">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <h2 class="text-2xl font-mono flex items-center gap-3">
+        <a href="/" class="text-terminal-green hover:text-terminal-dark transition-colors flex items-center gap-2">
+          <img src="/favela-hacker-logo.svg" alt="Favela Hacker Logo" class="w-10 h-10" />
+          {SITE_TITLE}
+        </a>
+      </h2>
+      <div class="flex items-center gap-6">
+        <HeaderLink href="/">Início</HeaderLink>
+        <HeaderLink href="/sobre">Sobre</HeaderLink>
+        <HeaderLink href="/blog">Blog</HeaderLink>
+        <HeaderLink href="/contato">Contato</HeaderLink>
+      </div>
+    </div>
+  </nav>
+</header>

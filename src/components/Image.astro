@@ -1,0 +1,29 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  className?: string;
+  width?: number;
+  height?: number;
+}
+
+const { 
+  src, 
+  alt, 
+  className = '', 
+  width, 
+  height 
+} = Astro.props;
+
+const imageProps = {
+  src,
+  alt,
+  width,
+  height,
+  class: `${className} transition-opacity`,
+  loading: "lazy",
+  decoding: "async",
+};
+---
+
+<img {...imageProps} />
