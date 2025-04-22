@@ -1,13 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         terminal: {
-          green: '#00ff00',
-          dark: '#008000',
-          bg: '#1a1a1a',
+          green: 'var(--terminal-green)',
+          dark: 'var(--terminal-dark-green)',
+          bg: 'var(--terminal-bg)',
+          text: 'var(--terminal-text)',
         },
       },
       fontFamily: {

@@ -1,0 +1,32 @@
+---
+---
+
+<button
+  id="theme-toggle"
+  class="p-2 rounded-lg bg-terminal-green/10 hover:bg-terminal-green/20 transition-colors"
+  aria-label="Toggle theme"
+>
+  <span class="dark:hidden text-xl">🌙</span>
+  <span class="hidden dark:inline text-xl">☀️</span>
+</button>
+
+<script>
+  const handleToggleClick = () => {
+    const element = document.documentElement;
+    const isDark = element.classList.contains('dark');
+    
+    element.classList.toggle('dark');
+    element.classList.toggle('light');
+    
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    
+    // Force a repaint to ensure all CSS variables are updated
+    document.body.style.display = 'none';
+    document.body.offsetHeight;
+    document.body.style.display = '';
+  };
+
+  document
+    .getElementById('theme-toggle')
+    ?.addEventListener('click', handleToggleClick);
+</script>

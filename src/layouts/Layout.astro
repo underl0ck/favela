@@ -20,11 +20,11 @@ const {
 ---
 
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
   <head>
     <BaseHead title={title} description={description} image={image} />
   </head>
-  <body class="bg-terminal-bg text-terminal-text">
+  <body class="bg-terminal-bg text-terminal-text transition-colors duration-300">
     <div class="noise"></div>
     <div class="terminal-effect">
       <Header />
@@ -33,5 +33,27 @@ const {
       </main>
       <Footer />
     </div>
+    <script>
+      const theme = (() => {
+        const storedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null;
+        if (storedTheme) {
+          return storedTheme;
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      })();
+    
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      }
+    
+      window.localStorage.setItem('theme', theme);
+    </script>
   </body>
 </html>

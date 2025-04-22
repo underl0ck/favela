@@ -1,68 +1,83 @@
-# Astro Starter Kit: Blog
+# Favela Hacker
 
-```sh
-npm create astro@latest -- --template blog
+![Favela Hacker](https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg)
+
+Favela Hacker é uma iniciativa que visa democratizar o conhecimento em cibersegurança, criando oportunidades reais para jovens talentosos de comunidades.
+
+## 🚀 Recursos
+
+- ✅ Design moderno com tema terminal
+- ✅ Modo claro/escuro
+- ✅ Blog integrado com MDX
+- ✅ Formulário de contato com rate limiting
+- ✅ SEO otimizado
+- ✅ Feed RSS
+- ✅ Sitemap automático
+- ✅ Totalmente responsivo
+
+## 🛠️ Stack Tecnológico
+
+- [Astro](https://astro.build)
+- [Tailwind CSS](https://tailwindcss.com)
+- [MDX](https://mdxjs.com)
+- [TypeScript](https://www.typescriptlang.org)
+
+## 📦 Estrutura do Projeto
+
 ```
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
+├── public/              # Arquivos estáticos
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+│   ├── components/      # Componentes Astro
+│   ├── content/         # Conteúdo do blog (MDX)
+│   ├── layouts/         # Layouts reutilizáveis
+│   ├── lib/            # Utilitários e funções
+│   ├── pages/          # Páginas da aplicação
+│   └── styles/         # Estilos globais
+├── astro.config.mjs    # Configuração do Astro
+└── tailwind.config.mjs # Configuração do Tailwind
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🧞 Comandos
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Comando                   | Ação                                                     |
+| :----------------------- | :------------------------------------------------------- |
+| `npm install`            | Instala as dependências                                  |
+| `npm run dev`            | Inicia o servidor de desenvolvimento em `localhost:4321` |
+| `npm run build`          | Gera a versão de produção em `./dist/`                  |
+| `npm run preview`        | Visualiza a versão de produção localmente               |
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+## 🎨 Personalização
 
-Any static assets, like images, can be placed in the `public/` directory.
+### Temas
 
-## 🧞 Commands
+O projeto suporta tema claro e escuro, com uma estética inspirada em terminal. As cores podem ser personalizadas em:
 
-All commands are run from the root of the project, from a terminal:
+- `src/styles/global.css`: Variáveis CSS para cores
+- `tailwind.config.mjs`: Configuração de cores do Tailwind
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+### Blog
 
-## 👀 Want to learn more?
+Os posts do blog são escritos em MDX e armazenados em `src/content/blog/`. Cada post deve incluir:
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```yaml
+---
+title: 'Título do Post'
+description: 'Descrição do post'
+pubDate: '2024-03-16'
+heroImage: 'URL da imagem de capa'
+---
+```
 
-## Credit
+## 📝 Licença
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## 👥 Contribuição
+
+Contribuições são bem-vindas! Por favor, leia nossas [diretrizes de contribuição](CONTRIBUTING.md) antes de submeter um PR.
+
+## 📧 Contato
+
+- Email: contato@favelahacker.org
+- Twitter: [@favelahacker](https://twitter.com/favelahacker)
+- LinkedIn: [Favela Hacker](https://linkedin.com/company/favelahacker)

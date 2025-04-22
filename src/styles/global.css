@@ -6,29 +6,22 @@
   --terminal-border: rgba(0, 255, 0, 0.2);
 }
 
-@font-face {
-  font-family: 'Atkinson';
-  src: url('/fonts/atkinson-regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Atkinson';
-  src: url('/fonts/atkinson-bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+:root.light {
+  --terminal-green: #008000;
+  --terminal-dark-green: #006400;
+  --terminal-bg: #ffffff;
+  --terminal-text: #1a1a1a;
+  --terminal-border: rgba(0, 128, 0, 0.2);
 }
 
 body {
-  font-family: 'Atkinson', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
   padding: 0;
   background: var(--terminal-bg);
   color: var(--terminal-text);
   line-height: 1.7;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .glitch-text {
@@ -70,6 +63,16 @@ body {
   animation: noise 8s steps(10) infinite;
 }
 
+.light .noise {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 128, 0, 0.03) 1px,
+    transparent 2px,
+    transparent 3px
+  );
+  opacity: 0.1;
+}
+
 @keyframes noise {
   0%, 100% { transform: translateY(0); }
   10% { transform: translateY(-1px); }
@@ -91,10 +94,18 @@ body {
   transition: all 0.3s ease;
 }
 
+.light .card {
+  background: rgba(0, 128, 0, 0.05);
+}
+
 .card:hover {
   border-color: var(--terminal-green);
   transform: translateY(-2px);
   box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+}
+
+.light .card:hover {
+  box-shadow: 0 0 20px rgba(0, 128, 0, 0.1);
 }
 
 .button {
@@ -118,6 +129,10 @@ body {
   box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
 }
 
+.light .button:hover {
+  box-shadow: 0 0 15px rgba(0, 128, 0, 0.3);
+}
+
 .form-input {
   width: 100%;
   padding: 0.8em;
@@ -129,10 +144,18 @@ body {
   transition: all 0.3s ease;
 }
 
+.light .form-input {
+  background: rgba(0, 128, 0, 0.05);
+}
+
 .form-input:focus {
   outline: none;
   border-color: var(--terminal-green);
   box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+}
+
+.light .form-input:focus {
+  box-shadow: 0 0 10px rgba(0, 128, 0, 0.1);
 }
 
 .form-textarea {
