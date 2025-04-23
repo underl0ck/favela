@@ -10,33 +10,118 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
 <Layout title={title} description={description} type="blog">
-  <article>
-    <div class="hero-image">
-      {heroImage && (
+  <article class="max-w-4xl mx-auto">
+    {heroImage && (
+      <div class="mb-12">
         <Image 
           src={heroImage} 
           alt={title}
           width={1020} 
           height={510}
-          className="mx-auto rounded-lg shadow-lg"
+          className="w-full h-[400px] object-cover rounded-lg shadow-lg"
         />
-      )}
-    </div>
-    <div class="prose max-w-prose mx-auto mt-8 px-4">
-      <div class="text-center mb-8">
-        <div class="text-terminal-green mb-4">
+      </div>
+    )}
+    
+    <div class="px-4">
+      <header class="text-center mb-12">
+        <div class="text-terminal-green mb-4 font-mono">
           <FormattedDate date={pubDate} />
           {updatedDate && (
             <div class="text-sm italic mt-2">
-              Last updated on <FormattedDate date={updatedDate} />
+              Última atualização: <FormattedDate date={updatedDate} />
             </div>
           )}
         </div>
-        <h1 class="text-4xl font-mono text-terminal-green mb-4">{title}</h1>
-        <p class="text-lg opacity-80">{description}</p>
-        <hr class="my-8 border-terminal-green/30" />
+        <h1 class="text-4xl md:text-5xl font-mono text-terminal-green mb-6 leading-tight">
+          {title}
+        </h1>
+        <p class="text-xl opacity-80 max-w-2xl mx-auto">
+          {description}
+        </p>
+      </header>
+
+      <hr class="border-terminal-green/30 mb-12" />
+
+      <div class="prose prose-lg dark:prose-invert prose-headings:font-mono prose-headings:text-terminal-green prose-a:text-terminal-green prose-strong:text-terminal-green prose-code:text-terminal-green max-w-none">
+        <slot />
       </div>
-      <slot />
+
+      <hr class="border-terminal-green/30 my-12" />
+
+      <footer class="text-center mb-12">
+        <a href="/blog" class="button">
+          ← Voltar para o Blog
+        </a>
+      </footer>
     </div>
   </article>
 </Layout>
+
+<style is:global>
+.prose {
+  --tw-prose-body: var(--terminal-text);
+  --tw-prose-headings: var(--terminal-green);
+  --tw-prose-links: var(--terminal-green);
+  --tw-prose-bold: var(--terminal-green);
+  --tw-prose-code: var(--terminal-green);
+  --tw-prose-quotes: var(--terminal-green);
+  --tw-prose-quote-borders: var(--terminal-green);
+  --tw-prose-hr: var(--terminal-green);
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  font-family: monospace;
+  color: var(--terminal-green);
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.prose p {
+  margin-bottom: 1.5em;
+}
+
+.prose ul, .prose ol {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+
+.prose li {
+  margin-bottom: 0.5em;
+}
+
+.prose code {
+  background: rgba(0, 255, 0, 0.1);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.prose pre {
+  background: rgba(0, 255, 0, 0.1);
+  padding: 1em;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--terminal-green);
+  padding-left: 1em;
+  font-style: italic;
+  margin: 1.5em 0;
+}
+
+.prose img {
+  border-radius: 8px;
+  margin: 2em 0;
+}
+
+.light .prose code {
+  background: rgba(0, 128, 0, 0.1);
+}
+
+.light .prose pre {
+  background: rgba(0, 128, 0, 0.1);
+}
+</style>

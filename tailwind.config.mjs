@@ -24,6 +24,23 @@ export default {
           '50%': { opacity: '0' },
         },
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: 'none',
+            color: 'var(--terminal-text)',
+            a: {
+              color: 'var(--terminal-green)',
+              '&:hover': {
+                color: 'var(--terminal-dark-green)',
+              },
+            },
+          },
+        },
+      },
     },
   },
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 };
