@@ -9,8 +9,15 @@ import { SITE_TITLE } from '../consts';
     <div class="flex flex-col md:flex-row items-center justify-between gap-4">
       <h2 class="text-2xl font-mono flex items-center gap-3">
         <a href="/" class="text-terminal-green hover:text-terminal-dark transition-colors flex items-center gap-2">
-          <img src="/favela-hacker-logo.svg" alt="Favela Hacker Logo" class="w-10 h-10" />
-          {SITE_TITLE}
+          <img 
+            src="/favela-hacker-logo.svg" 
+            alt="Favela Hacker Logo" 
+            width="40" 
+            height="40"
+            class="w-10 h-10"
+            loading="eager"
+          />
+          <span class="font-bold">{SITE_TITLE}</span>
         </a>
       </h2>
       <div class="flex items-center gap-6">

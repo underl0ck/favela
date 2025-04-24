@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import BlogCard from '../components/BlogCard.astro';
 import Card from '../components/Card.astro';
-import Image from '../components/Image.astro';
+import { Image } from 'astro:assets';
 import LoadingSpinner from '../components/LoadingSpinner.astro';
 import { getCollection } from 'astro:content';
 
@@ -32,7 +32,11 @@ const modules = [
     <Image 
       src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg"
       alt="Estudantes aprendendo tecnologia"
-      className="w-full h-96 object-cover rounded-lg mb-8"
+      width={1200}
+      height={600}
+      class="w-full h-96 object-cover rounded-lg mb-8"
+      loading="eager"
+      decoding="sync"
     />
     <h1 class="glitch-text text-terminal-green font-mono text-5xl md:text-6xl font-bold mb-6">
       FAVELA HACKER
