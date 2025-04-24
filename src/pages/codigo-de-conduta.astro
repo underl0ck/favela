@@ -6,58 +6,85 @@ const sections = [
   {
     title: "Uso Ético",
     items: [
-      "Utilizar minhas habilidades apenas para proteger e melhorar a cibersegurança de comunidades, indivíduos e organizações",
-      "Nunca explorar vulnerabilidades para fins maliciosos ou ganho pessoal",
-      "Reportar problemas de segurança de forma responsável através dos canais apropriados"
+      "Utilizar conhecimentos apenas para proteção e melhoria da segurança",
+      "Nunca explorar vulnerabilidades para fins maliciosos",
+      "Reportar problemas de segurança de forma responsável",
+      "Respeitar limites legais e éticos",
+      "Proteger dados sensíveis",
+      "Manter confidencialidade"
     ]
   },
   {
     title: "Compartilhamento de Conhecimento",
     items: [
-      "Compartilhar conhecimento para educar e capacitar outros em cibersegurança",
-      "Contribuir para o crescimento da comunidade de forma positiva",
-      "Ajudar outros participantes em sua jornada de aprendizado"
+      "Compartilhar conhecimento para educar e capacitar",
+      "Contribuir positivamente para a comunidade",
+      "Ajudar outros participantes em sua jornada",
+      "Documentar e compartilhar boas práticas",
+      "Participar ativamente das discussões",
+      "Respeitar diferentes níveis de conhecimento"
     ]
   },
   {
     title: "Privacidade e Confidencialidade",
     items: [
-      "Respeitar a privacidade e confidencialidade de todas as partes envolvidas",
+      "Respeitar a privacidade de todos os envolvidos",
       "Proteger dados sensíveis e informações pessoais",
-      "Manter sigilo sobre vulnerabilidades até que sejam corrigidas"
+      "Manter sigilo sobre vulnerabilidades até correção",
+      "Não compartilhar informações sem autorização",
+      "Seguir políticas de disclosure responsável",
+      "Proteger credenciais de acesso"
     ]
   },
   {
     title: "Conformidade Legal",
     items: [
-      "Seguir todas as leis e regulamentos aplicáveis em atividades de segurança",
-      "Obter permissão antes de testar ou analisar quaisquer sistemas",
-      "Documentar todas as atividades de segurança de forma transparente"
+      "Seguir todas as leis e regulamentos aplicáveis",
+      "Obter autorização antes de testes de segurança",
+      "Documentar todas as atividades de forma transparente",
+      "Respeitar direitos autorais e licenças",
+      "Cumprir termos de serviço",
+      "Manter registros adequados"
     ]
   },
   {
     title: "Responsabilidade Social",
     items: [
-      "Priorizar o bem-estar das comunidades vulneráveis",
-      "Usar a tecnologia como ferramenta de transformação social positiva",
-      "Promover a inclusão e diversidade no campo da cibersegurança"
+      "Priorizar o bem-estar das comunidades",
+      "Usar tecnologia para transformação social positiva",
+      "Promover inclusão e diversidade",
+      "Combater preconceitos e discriminação",
+      "Apoiar iniciativas sociais",
+      "Ser exemplo positivo"
     ]
   },
   {
     title: "Integridade Profissional",
     items: [
-      "Manter padrões éticos e profissionais em todas as atividades",
-      "Ser honesto e transparente em todas as interações",
-      "Reconhecer e corrigir erros quando ocorrerem"
+      "Manter padrões éticos elevados",
+      "Ser honesto e transparente",
+      "Reconhecer e corrigir erros",
+      "Evitar conflitos de interesse",
+      "Manter-se atualizado tecnicamente",
+      "Buscar excelência profissional"
     ]
   }
 ];
 
 const consequences = [
-  "Advertência formal",
+  "Advertência formal por escrito",
   "Suspensão temporária do programa",
   "Desligamento imediato do programa",
-  "Outras ações conforme determinado pela coordenação"
+  "Bloqueio de acesso aos recursos",
+  "Notificação a parceiros e empregadores",
+  "Ações legais quando aplicável"
+];
+
+const reporting = [
+  "Email: conduta@favelahacker.com.br",
+  "Formulário anônimo no portal",
+  "Contato direto com coordenadores",
+  "Canal de denúncias 24/7"
 ];
 ---
 
@@ -69,9 +96,12 @@ const consequences = [
     <h1 class="text-4xl font-mono text-terminal-green mb-8">Código de Conduta</h1>
     
     <Card title="Introdução" className="mb-8">
-      <p class="text-lg">
-        Como participante do programa Favela Hacker, eu me comprometo a usar meus conhecimentos
+      <p class="text-lg mb-4">
+        Como participante do programa Favela Hacker, me comprometo a usar meus conhecimentos
         e habilidades em cibersegurança exclusivamente para fins éticos e benéficos.
+      </p>
+      <p class="text-lg">
+        Última atualização: Março de 2024
       </p>
     </Card>
 
@@ -95,6 +125,17 @@ const consequences = [
       <ul class="list-none space-y-2">
         {consequences.map(consequence => (
           <li>• {consequence}</li>
+        ))}
+      </ul>
+    </Card>
+
+    <Card title="Reportando Violações" className="mb-8">
+      <p class="mb-4">
+        Se você presenciar ou for vítima de uma violação deste código, reporte através de:
+      </p>
+      <ul class="list-none space-y-2">
+        {reporting.map(channel => (
+          <li>• {channel}</li>
         ))}
       </ul>
     </Card>

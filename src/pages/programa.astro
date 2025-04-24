@@ -1,0 +1,229 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Image from '../components/Image.astro';
+
+const modules = [
+  {
+    title: "Módulo 1: Fundamentos da Computação",
+    duration: "4 semanas",
+    topics: [
+      {
+        name: "Sistemas Operacionais",
+        subjects: [
+          "Introdução ao Linux",
+          "Interface de linha de comando",
+          "Gerenciamento de arquivos e permissões",
+          "Processos e serviços",
+          "Instalação e configuração básica"
+        ]
+      },
+      {
+        name: "Hardware e Arquitetura",
+        subjects: [
+          "Componentes do computador",
+          "Memória e armazenamento",
+          "Processadores",
+          "Dispositivos de entrada/saída",
+          "Arquitetura básica de computadores"
+        ]
+      }
+    ]
+  },
+  {
+    title: "Módulo 2: Programação Básica",
+    duration: "6 semanas",
+    topics: [
+      {
+        name: "Lógica de Programação",
+        subjects: [
+          "Algoritmos e fluxogramas",
+          "Variáveis e tipos de dados",
+          "Estruturas de controle",
+          "Funções e procedimentos",
+          "Debugging básico"
+        ]
+      },
+      {
+        name: "Python Fundamental",
+        subjects: [
+          "Sintaxe básica",
+          "Estruturas de dados",
+          "Bibliotecas padrão",
+          "Manipulação de arquivos",
+          "Projetos práticos simples"
+        ]
+      }
+    ]
+  },
+  {
+    title: "Módulo 3: Redes de Computadores",
+    duration: "6 semanas",
+    topics: [
+      {
+        name: "Fundamentos de Redes",
+        subjects: [
+          "Modelo OSI e TCP/IP",
+          "Endereçamento IP",
+          "Protocolos básicos",
+          "Redes locais e WAN",
+          "Configuração básica de rede"
+        ]
+      },
+      {
+        name: "Serviços de Rede",
+        subjects: [
+          "DNS e DHCP",
+          "Servidores web",
+          "Email e FTP",
+          "Firewall básico",
+          "Monitoramento de rede"
+        ]
+      }
+    ]
+  },
+  {
+    title: "Módulo 4: Introdução à Cibersegurança",
+    duration: "8 semanas",
+    topics: [
+      {
+        name: "Conceitos Fundamentais",
+        subjects: [
+          "Princípios de segurança",
+          "Tipos de ameaças",
+          "Vulnerabilidades comuns",
+          "Controles de segurança",
+          "Gestão de riscos básica"
+        ]
+      },
+      {
+        name: "Práticas de Segurança",
+        subjects: [
+          "Senhas e autenticação",
+          "Criptografia básica",
+          "Malware e antivírus",
+          "Backup e recuperação",
+          "Segurança em redes sociais"
+        ]
+      }
+    ]
+  },
+  {
+    title: "Módulo 5: Segurança Ofensiva Básica",
+    duration: "8 semanas",
+    topics: [
+      {
+        name: "Testes de Penetração",
+        subjects: [
+          "Metodologias de pentest",
+          "Reconhecimento básico",
+          "Scanners de vulnerabilidades",
+          "Exploração básica",
+          "Documentação de testes"
+        ]
+      },
+      {
+        name: "Ferramentas de Segurança",
+        subjects: [
+          "Kali Linux básico",
+          "Nmap e Wireshark",
+          "Metasploit Framework",
+          "Burp Suite Community",
+          "OWASP ZAP"
+        ]
+      }
+    ]
+  },
+  {
+    title: "Módulo 6: Projeto Final",
+    duration: "4 semanas",
+    topics: [
+      {
+        name: "Projeto Prático",
+        subjects: [
+          "Definição do escopo",
+          "Planejamento",
+          "Execução do projeto",
+          "Documentação",
+          "Apresentação final"
+        ]
+      },
+      {
+        name: "Preparação Profissional",
+        subjects: [
+          "Currículo e LinkedIn",
+          "Certificações recomendadas",
+          "Entrevistas técnicas",
+          "Portfólio",
+          "Networking"
+        ]
+      }
+    ]
+  }
+];
+---
+
+<Layout
+  title="Programa - Favela Hacker"
+  description="Conheça o currículo completo do programa Favela Hacker"
+>
+  <div class="max-w-4xl mx-auto">
+    <Image
+      src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg"
+      alt="Estudantes em laboratório de tecnologia"
+      className="w-full h-96 object-cover rounded-lg mb-8"
+    />
+    
+    <h1 class="text-4xl font-mono text-terminal-green mb-8">Programa Completo</h1>
+    
+    <Card title="Visão Geral" className="mb-12">
+      <div class="space-y-4">
+        <p>
+          Nosso programa foi desenvolvido para construir uma base sólida em tecnologia,
+          permitindo que mesmo quem está começando do zero possa se tornar um profissional
+          de cibersegurança.
+        </p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li>Duração total: 36 semanas (9 meses)</li>
+          <li>Carga horária: 15 horas semanais</li>
+          <li>Aulas práticas em laboratório</li>
+          <li>Mentoria individual</li>
+          <li>Projetos reais</li>
+        </ul>
+      </div>
+    </Card>
+
+    <div class="space-y-12">
+      {modules.map(module => (
+        <section>
+          <h2 class="text-2xl font-mono text-terminal-green mb-6">{module.title}</h2>
+          <p class="text-terminal-green mb-4">Duração: {module.duration}</p>
+          
+          <div class="grid md:grid-cols-2 gap-6">
+            {module.topics.map(topic => (
+              <Card title={topic.name}>
+                <ul class="space-y-2">
+                  {topic.subjects.map(subject => (
+                    <li>• {subject}</li>
+                  ))}
+                </ul>
+              </Card>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <div class="text-center mt-12">
+      <p class="text-lg mb-4">Quer fazer parte da próxima turma?</p>
+      <div class="flex justify-center gap-4">
+        <a href="/inscreva-se" class="button">
+          Inscreva-se Agora
+        </a>
+        <a href="/contato" class="button bg-transparent border-2 border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-terminal-bg">
+          Tire Suas Dúvidas
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>

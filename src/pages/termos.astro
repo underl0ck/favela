@@ -1,0 +1,115 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+
+const sections = [
+  {
+    title: "Termos Gerais",
+    content: `Ao participar do Favela Hacker, você concorda em:
+      • Seguir nosso código de conduta
+      • Respeitar todos os participantes
+      • Usar os recursos de forma responsável
+      • Manter a confidencialidade do material
+      • Não compartilhar credenciais de acesso
+      • Reportar violações ou incidentes`
+  },
+  {
+    title: "Responsabilidades",
+    content: `Como participante, você é responsável por:
+      • Manter suas credenciais seguras
+      • Reportar violações do código de conduta
+      • Participar ativamente das atividades
+      • Respeitar prazos e compromissos
+      • Manter comunicação profissional
+      • Seguir as diretrizes de segurança`
+  },
+  {
+    title: "Propriedade Intelectual",
+    content: `Todo o material do curso:
+      • É protegido por direitos autorais
+      • Não pode ser compartilhado sem autorização
+      • Deve ser usado apenas para fins educacionais
+      • Permanece propriedade do Favela Hacker
+      • Inclui código, documentação e recursos
+      • Respeita licenças de terceiros`
+  },
+  {
+    title: "Uso Aceitável",
+    content: `Os recursos do programa devem ser utilizados:
+      • Apenas para fins educacionais
+      • De forma ética e legal
+      • Respeitando limites estabelecidos
+      • Sem prejudicar terceiros
+      • Seguindo boas práticas
+      • Com responsabilidade`
+  },
+  {
+    title: "Limitação de Responsabilidade",
+    content: `O Favela Hacker não se responsabiliza por:
+      • Uso indevido do conhecimento
+      • Ações individuais dos participantes
+      • Problemas técnicos externos
+      • Perdas ou danos indiretos
+      • Interrupções de serviço
+      • Atos de terceiros`
+  },
+  {
+    title: "Modificações",
+    content: `O Favela Hacker se reserva o direito de:
+      • Atualizar estes termos
+      • Modificar o programa
+      • Ajustar conteúdos
+      • Alterar requisitos
+      • Notificar mudanças importantes
+      • Suspender participantes`
+  }
+];
+---
+
+<Layout
+  title="Termos de Uso - Favela Hacker"
+  description="Termos e condições para participação no programa Favela Hacker"
+>
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-mono text-terminal-green mb-8">Termos de Uso</h1>
+    
+    <Card title="Acordo de Participação" className="mb-8">
+      <p class="text-lg mb-4">
+        Este documento estabelece os termos e condições para participação no programa
+        Favela Hacker. Ao se inscrever, você concorda com todas as condições aqui estabelecidas.
+      </p>
+      <p class="text-lg">
+        Última atualização: Março de 2024
+      </p>
+    </Card>
+
+    <div class="space-y-8">
+      {sections.map(section => (
+        <Card title={section.title}>
+          <div class="whitespace-pre-line">
+            {section.content}
+          </div>
+        </Card>
+      ))}
+    </div>
+
+    <Card title="Aceitação" className="mt-8">
+      <p>
+        Ao utilizar nossos serviços ou participar do programa, você confirma que:
+      </p>
+      <ul class="mt-4 space-y-2">
+        <li>• Leu e compreendeu estes termos</li>
+        <li>• Concorda em cumprir todas as condições</li>
+        <li>• Tem capacidade legal para aceitar estes termos</li>
+        <li>• Forneceu informações verdadeiras e precisas</li>
+      </ul>
+    </Card>
+
+    <div class="text-center mt-12">
+      <p class="text-lg mb-4">Tem dúvidas sobre nossos termos?</p>
+      <a href="/contato" class="button">
+        Entre em Contato
+      </a>
+    </div>
+  </div>
+</Layout>

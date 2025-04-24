@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+
+const sections = [
+  {
+    title: "Coleta de Dados",
+    content: `Coletamos apenas as informações necessárias para:
+      • Processar sua inscrição no programa
+      • Comunicar sobre o andamento do processo
+      • Enviar materiais educacionais
+      • Melhorar nossos serviços
+      • Cumprir obrigações legais`
+  },
+  {
+    title: "Uso de Dados",
+    content: `Suas informações são utilizadas para:
+      • Avaliar sua candidatura
+      • Personalizar sua experiência de aprendizado
+      • Comunicar sobre atualizações do programa
+      • Análise estatística anônima
+      • Melhorar nossos serviços e conteúdo`
+  },
+  {
+    title: "Proteção de Dados",
+    content: `Seus dados são protegidos através de:
+      • Criptografia em trânsito e repouso
+      • Acesso restrito apenas a pessoal autorizado
+      • Políticas rígidas de segurança
+      • Atualizações regulares de segurança
+      • Monitoramento contínuo`
+  },
+  {
+    title: "Seus Direitos",
+    content: `Você tem direito a:
+      • Acessar seus dados pessoais
+      • Solicitar correções ou atualizações
+      • Pedir exclusão de dados
+      • Exportar suas informações
+      • Revogar consentimento
+      • Solicitar limitação do processamento`
+  },
+  {
+    title: "Cookies e Rastreamento",
+    content: `Utilizamos cookies e tecnologias similares para:
+      • Melhorar a experiência do usuário
+      • Manter sua sessão ativa
+      • Analisar o uso do site
+      • Personalizar conteúdo
+      • Você pode gerenciar preferências de cookies`
+  },
+  {
+    title: "Compartilhamento",
+    content: `Seus dados podem ser compartilhados apenas:
+      • Com seu consentimento explícito
+      • Para cumprir obrigações legais
+      • Com parceiros de confiança
+      • De forma anonimizada para análises
+      • Nunca vendemos seus dados`
+  }
+];
+---
+
+<Layout
+  title="Política de Privacidade - Favela Hacker"
+  description="Como protegemos seus dados e respeitamos sua privacidade"
+>
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-mono text-terminal-green mb-8">Política de Privacidade</h1>
+    
+    <Card title="Compromisso com sua Privacidade" className="mb-8">
+      <p class="text-lg mb-4">
+        No Favela Hacker, levamos a sério a proteção dos seus dados pessoais. Esta política
+        descreve como coletamos, usamos e protegemos suas informações em conformidade com
+        a Lei Geral de Proteção de Dados (LGPD).
+      </p>
+      <p class="text-lg">
+        Última atualização: Março de 2024
+      </p>
+    </Card>
+
+    <div class="space-y-8">
+      {sections.map(section => (
+        <Card title={section.title}>
+          <div class="whitespace-pre-line">
+            {section.content}
+          </div>
+        </Card>
+      ))}
+    </div>
+
+    <Card title="Contato DPO" className="mt-8">
+      <p>
+        Para questões relacionadas aos seus dados pessoais, entre em contato com nosso
+        Encarregado de Proteção de Dados (DPO):
+      </p>
+      <ul class="mt-4 space-y-2">
+        <li>Email: dpo@favelahacker.com.br</li>
+        <li>Telefone: (11) 1234-5678</li>
+      </ul>
+    </Card>
+
+    <div class="text-center mt-12">
+      <p class="text-lg mb-4">Tem dúvidas sobre nossa política de privacidade?</p>
+      <a href="/contato" class="button">
+        Entre em Contato
+      </a>
+    </div>
+  </div>
+</Layout>

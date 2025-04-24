@@ -15,27 +15,39 @@ const stats = [
   { number: '85%', label: 'Taxa de Empregabilidade', description: 'dos nossos alunos' },
   { number: '20+', label: 'Mentores Ativos', description: 'profissionais voluntários' }
 ];
+
+const modules = [
+  { number: '1', title: 'Fundamentos', description: 'Base sólida em computação', slug: 'modulo-1-fundamentos-computacao' },
+  { number: '2', title: 'Programação', description: 'Python para hackers', slug: 'modulo-2-programacao-basica' },
+  { number: '3', title: 'Redes', description: 'Infraestrutura e protocolos', slug: 'modulo-3-redes-computadores' },
+  { number: '4', title: 'Segurança', description: 'Conceitos fundamentais', slug: 'modulo-4-introducao-ciberseguranca' },
+  { number: '5', title: 'Pentest', description: 'Hacking ético na prática', slug: 'modulo-5-seguranca-ofensiva' },
+  { number: '6', title: 'Projeto', description: 'Aplicação real', slug: 'modulo-6-projeto-final' }
+];
 ---
 
 <Layout>
   <!-- Hero Section -->
   <section class="text-center mb-20">
-    <div class="relative inline-block">
-      <Image 
-        src="/favela-hacker-logo.svg" 
-        alt="Favela Hacker Logo" 
-        className="w-48 h-48 mb-8 glow-effect"
-        width={192}
-        height={192}
-        loading="eager"
-      />
-    </div>
+    <Image 
+      src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg"
+      alt="Estudantes aprendendo tecnologia"
+      className="w-full h-96 object-cover rounded-lg mb-8"
+    />
     <h1 class="glitch-text text-terminal-green font-mono text-5xl md:text-6xl font-bold mb-6">
       FAVELA HACKER
     </h1>
-    <p class="text-xl md:text-2xl max-w-3xl mx-auto opacity-90">
+    <p class="text-xl md:text-2xl max-w-3xl mx-auto opacity-90 mb-8">
       Transformando vidas através da tecnologia e cibersegurança nas comunidades
     </p>
+    <div class="flex justify-center gap-4">
+      <a href="/programa" class="button">
+        Conheça o Programa
+      </a>
+      <a href="/inscreva-se" class="button bg-transparent border-2 border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-terminal-bg">
+        Inscreva-se
+      </a>
+    </div>
   </section>
 
   <!-- Impact Stats -->
@@ -46,6 +58,23 @@ const stats = [
         <div class="text-sm opacity-75">{stat.description}</div>
       </Card>
     ))}
+  </section>
+
+  <!-- Program Overview -->
+  <section class="mb-20">
+    <h2 class="text-terminal-green font-mono text-3xl mb-8">Programa Completo</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      {modules.map(module => (
+        <a href={`/blog/${module.slug}`} class="block">
+          <Card title={`Módulo ${module.number}: ${module.title}`} className="h-full hover:scale-105 transition-transform">
+            <p>{module.description}</p>
+          </Card>
+        </a>
+      ))}
+    </div>
+    <div class="text-center mt-8">
+      <a href="/programa" class="button">Ver Programa Completo</a>
+    </div>
   </section>
 
   <!-- Latest Posts -->
