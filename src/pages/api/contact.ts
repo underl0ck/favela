@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { ContactFormSchema, sendContactEmail } from '../../lib/email';
 import { checkRateLimit } from '../../lib/rate-limit';
 import { generateCSRFToken, validateCSRFToken } from '../../lib/csrf';
+import xss from 'xss';
 
 export const POST: APIRoute = async ({ request }) => {
   const headers = {
@@ -39,8 +40,16 @@ export const POST: APIRoute = async ({ request }) => {
 
     const data = await request.json();
     
-    // Validate data
-    const validatedData = ContactFormSchema.parse(data);
+    // Sanitize input data
+    const sanitizedData = {
+      name: xss(data.name),
+      email: xss(data.email),
+      subject: xss(data.subject),
+      message: xss(data.message)
+    };
+    
+    // Validate sanitized data
+    const validatedData = ContactFormSchema.parse(sanitizedData);
     
     const result = await sendContactEmail(validatedData);
     

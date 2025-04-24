@@ -1,21 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
-import Image from '../components/Image.astro';
+import { Image } from 'astro:assets';
+import { generateCSRFToken } from '../lib/csrf';
 
 const contactInfo = [
   {
     title: 'Localização',
     items: [
       'Diadema, SP',
-      'Peabiru, PR'
+      'Peabiru, PR',
+      'Sao Paulo, SP'
     ]
   },
   {
     title: 'Contato Direto',
     items: [
-      'Email: contato@favelahacker.org',
-      'Instagram: @favelahacker_'
+      'Email: contato@favelahacker.com.br',
+      'Instagram: @favelahacker'
     ]
   }
 ];
@@ -23,8 +25,12 @@ const contactInfo = [
 const socialLinks = [
   { name: 'GitHub', url: 'https://github.com/favelahacker' },
   { name: 'Twitter', url: 'https://twitter.com/favelahacker' },
+  { name: 'LinkedIn', url: 'https://linkedin.com/company/favelahacker' },
   { name: 'Instagram', url: 'https://instagram.com/favelahacker' }
 ];
+
+// Generate initial CSRF token
+const csrfToken = generateCSRFToken();
 ---
 
 <Layout
@@ -35,7 +41,11 @@ const socialLinks = [
     <Image
       src="https://images.pexels.com/photos/3861972/pexels-photo-3861972.jpeg"
       alt="Contato Favela Hacker"
-      className="w-full h-64 object-cover rounded-lg mb-8"
+      width={800}
+      height={400}
+      class="w-full h-64 object-cover rounded-lg mb-8"
+      loading="eager"
+      decoding="sync"
     />
     
     <h1 class="text-3xl font-mono text-terminal-green mb-8">Entre em Contato</h1>
@@ -50,7 +60,7 @@ const socialLinks = [
       ))}
     </div>
 
-    <form id="contact-form" class="space-y-6">
+    <form id="contact-form" class="space-y-6" data-csrf-token={csrfToken}>
       <div>
         <label class="block text-terminal-green font-mono mb-2" for="name">
           Nome
@@ -64,6 +74,7 @@ const socialLinks = [
           maxlength="100"
           class="form-input"
           placeholder="Seu nome"
+          autocomplete="name"
         />
         <span class="text-red-500 text-sm hidden" data-error="name"></span>
       </div>
@@ -80,6 +91,7 @@ const socialLinks = [
           maxlength="100"
           class="form-input"
           placeholder="seu@email.com"
+          autocomplete="email"
         />
         <span class="text-red-500 text-sm hidden" data-error="email"></span>
       </div>
@@ -154,18 +166,22 @@ const messageTextarea = document.getElementById('message') as HTMLTextAreaElemen
 const messageLengthDisplay = document.getElementById('message-length') as HTMLSpanElement;
 
 // Character counter
-messageTextarea.addEventListener('input', () => {
+messageTextarea?.addEventListener('input', () => {
   const length = messageTextarea.value.length;
-  messageLengthDisplay.textContent = length.toString();
+  if (messageLengthDisplay) {
+    messageLengthDisplay.textContent = length.toString();
+  }
   
   if (length > 1000) {
     messageTextarea.value = messageTextarea.value.slice(0, 1000);
-    messageLengthDisplay.textContent = '1000';
+    if (messageLengthDisplay) {
+      messageLengthDisplay.textContent = '1000';
+    }
   }
 });
 
 // Clear error message when user starts typing
-form.querySelectorAll('input, textarea, select').forEach(element => {
+form?.querySelectorAll('input, textarea, select').forEach(element => {
   element.addEventListener('input', () => {
     const errorSpan = form.querySelector(`[data-error="${element.id}"]`);
     if (errorSpan) {
@@ -176,7 +192,7 @@ form.querySelectorAll('input, textarea, select').forEach(element => {
   });
 });
 
-form.addEventListener('submit', async (e) => {
+form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   
   // Reset messages
@@ -204,22 +220,20 @@ form.addEventListener('submit', async (e) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-CSRF-Token': form.dataset.csrfToken || ''
       },
       body: JSON.stringify(data),
     });
 
-    let result;
-    const responseText = await response.text();
-    
-    try {
-      result = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error('Failed to parse response:', responseText);
-      throw new Error('Erro no servidor: resposta inválida');
-    }
+    const result = await response.json();
     
     if (!response.ok || !result.success) {
       throw new Error(result.error || 'Erro ao enviar mensagem');
+    }
+
+    // Update CSRF token for next request
+    if (result.csrfToken) {
+      form.dataset.csrfToken = result.csrfToken;
     }
     
     // Redirect to success page
