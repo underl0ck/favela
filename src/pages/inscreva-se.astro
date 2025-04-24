@@ -1,0 +1,293 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Image from '../components/Image.astro';
+
+const benefits = [
+  'Curso gratuito de 6 meses',
+  'Mentoria personalizada',
+  'Projetos práticos',
+  'Networking com profissionais',
+  'Preparação para certificações',
+  'Oportunidades de emprego'
+];
+
+const requirements = [
+  'Idade mínima: 16 anos',
+  'Acesso à internet',
+  'Comprometimento com os estudos',
+  'Disponibilidade de 15h semanais',
+  'Interesse por tecnologia',
+  'Residir em comunidade'
+];
+
+const process = [
+  {
+    step: '1',
+    title: 'Inscrição',
+    description: 'Preencha o formulário de interesse'
+  },
+  {
+    step: '2',
+    title: 'Seleção',
+    description: 'Processo seletivo com teste básico e entrevista'
+  },
+  {
+    step: '3',
+    title: 'Início',
+    description: 'Começo das aulas na próxima turma'
+  }
+];
+---
+
+<Layout
+  title="Inscreva-se - Favela Hacker"
+  description="Faça parte da próxima geração de profissionais em cibersegurança"
+>
+  <div class="max-w-4xl mx-auto">
+    <Image
+      src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg"
+      alt="Estudantes do Favela Hacker"
+      className="w-full h-64 object-cover rounded-lg mb-8"
+    />
+    
+    <h1 class="text-4xl font-mono text-terminal-green mb-8">Quero Aprender</h1>
+    
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+      <Card title="Benefícios">
+        <ul class="space-y-2">
+          {benefits.map(benefit => (
+            <li>• {benefit}</li>
+          ))}
+        </ul>
+      </Card>
+
+      <Card title="Requisitos">
+        <ul class="space-y-2">
+          {requirements.map(requirement => (
+            <li>• {requirement}</li>
+          ))}
+        </ul>
+      </Card>
+    </div>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-mono text-terminal-green mb-6">Processo Seletivo</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        {process.map(({ step, title, description }) => (
+          <Card title={`${step}. ${title}`}>
+            <p>{description}</p>
+          </Card>
+        ))}
+      </div>
+    </section>
+
+    <Card title="Inscreva-se" className="mb-12">
+      <form id="enrollment-form" class="space-y-6">
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="name">
+            Nome Completo
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            minlength="2"
+            maxlength="100"
+            pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+"
+            class="form-input"
+            placeholder="Seu nome completo"
+          />
+          <span class="text-red-500 text-sm hidden" data-error="name"></span>
+        </div>
+
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="email">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            maxlength="100"
+            class="form-input"
+            placeholder="seu@email.com"
+          />
+          <span class="text-red-500 text-sm hidden" data-error="email"></span>
+        </div>
+
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="age">
+            Idade
+          </label>
+          <input
+            type="number"
+            id="age"
+            name="age"
+            required
+            min="16"
+            max="100"
+            class="form-input"
+          />
+          <span class="text-red-500 text-sm hidden" data-error="age"></span>
+        </div>
+
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="community">
+            Comunidade onde reside
+          </label>
+          <input
+            type="text"
+            id="community"
+            name="community"
+            required
+            minlength="2"
+            maxlength="100"
+            class="form-input"
+            placeholder="Nome da sua comunidade"
+          />
+          <span class="text-red-500 text-sm hidden" data-error="community"></span>
+        </div>
+
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="motivation">
+            Por que você quer participar do programa?
+          </label>
+          <textarea
+            id="motivation"
+            name="motivation"
+            required
+            minlength="10"
+            maxlength="1000"
+            class="form-input form-textarea"
+            placeholder="Conte-nos sua motivação"
+          ></textarea>
+          <span class="text-red-500 text-sm hidden" data-error="motivation"></span>
+          <div class="text-sm text-terminal-green mt-1">
+            <span id="motivation-length">0</span>/1000 caracteres
+          </div>
+        </div>
+
+        <div id="form-error" class="text-red-500 hidden"></div>
+        <div id="form-success" class="text-terminal-green hidden"></div>
+
+        <div>
+          <button type="submit" class="button" id="submit-button">
+            Enviar Inscrição
+          </button>
+        </div>
+      </form>
+    </Card>
+
+    <div class="text-center">
+      <p class="text-lg mb-4">Tem alguma dúvida?</p>
+      <a href="/contato" class="button bg-transparent border-2 border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-terminal-bg">
+        Entre em Contato
+      </a>
+    </div>
+  </div>
+</Layout>
+
+<script>
+const form = document.getElementById('enrollment-form') as HTMLFormElement;
+const errorDiv = document.getElementById('form-error') as HTMLDivElement;
+const successDiv = document.getElementById('form-success') as HTMLDivElement;
+const submitButton = document.getElementById('submit-button') as HTMLButtonElement;
+const motivationTextarea = document.getElementById('motivation') as HTMLTextAreaElement;
+const motivationLength = document.getElementById('motivation-length') as HTMLSpanElement;
+
+// Character counter
+motivationTextarea?.addEventListener('input', () => {
+  const length = motivationTextarea.value.length;
+  if (motivationLength) {
+    motivationLength.textContent = length.toString();
+  }
+  
+  if (length > 1000) {
+    motivationTextarea.value = motivationTextarea.value.slice(0, 1000);
+    if (motivationLength) {
+      motivationLength.textContent = '1000';
+    }
+  }
+});
+
+// Clear error message when user starts typing
+form?.querySelectorAll('input, textarea').forEach(element => {
+  element.addEventListener('input', () => {
+    const errorSpan = form.querySelector(`[data-error="${element.id}"]`);
+    if (errorSpan) {
+      errorSpan.textContent = '';
+      errorSpan.classList.add('hidden');
+    }
+    errorDiv.classList.add('hidden');
+  });
+});
+
+form?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  // Reset messages
+  errorDiv.classList.add('hidden');
+  successDiv.classList.add('hidden');
+  form.querySelectorAll('[data-error]').forEach(el => {
+    el.textContent = '';
+    el.classList.add('hidden');
+  });
+  
+  // Disable submit button
+  submitButton.disabled = true;
+  submitButton.textContent = 'Enviando...';
+  
+  try {
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      subject: 'aluno',
+      message: `
+Nome: ${formData.get('name')}
+Email: ${formData.get('email')}
+Idade: ${formData.get('age')}
+Comunidade: ${formData.get('community')}
+Motivação: ${formData.get('motivation')}
+      `.trim()
+    };
+    
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Erro ao enviar inscrição');
+    }
+    
+    // Redirect to success page
+    window.location.href = '/contato/sucesso';
+    
+  } catch (error) {
+    console.error('Form submission error:', error);
+    let errorMessage = 'Erro ao enviar inscrição';
+    
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    
+    // Display the error message
+    errorDiv.textContent = errorMessage;
+    errorDiv.classList.remove('hidden');
+    
+  } finally {
+    // Re-enable submit button
+    submitButton.disabled = false;
+    submitButton.textContent = 'Enviar Inscrição';
+  }
+});
+</script>

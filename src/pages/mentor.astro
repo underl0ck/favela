@@ -1,0 +1,297 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Image from '../components/Image.astro';
+
+const responsibilities = [
+  'Mentorar alunos semanalmente',
+  'Compartilhar experiências práticas',
+  'Ajudar no desenvolvimento técnico',
+  'Orientar sobre carreira',
+  'Participar de workshops',
+  'Avaliar projetos práticos'
+];
+
+const requirements = [
+  'Experiência em cibersegurança',
+  'Disponibilidade de 4h semanais',
+  'Comprometimento mínimo de 6 meses',
+  'Boa comunicação',
+  'Vontade de ensinar',
+  'Alinhamento com nossos valores'
+];
+
+const benefits = [
+  'Impacto social direto',
+  'Networking com outros mentores',
+  'Desenvolvimento de liderança',
+  'Reconhecimento da comunidade',
+  'Certificado de mentoria',
+  'Participação em eventos'
+];
+---
+
+<Layout
+  title="Seja Mentor - Favela Hacker"
+  description="Compartilhe seu conhecimento e transforme vidas através da mentoria"
+>
+  <div class="max-w-4xl mx-auto">
+    <Image
+      src="https://images.pexels.com/photos/3861964/pexels-photo-3861964.jpeg"
+      alt="Mentoria no Favela Hacker"
+      className="w-full h-64 object-cover rounded-lg mb-8"
+    />
+    
+    <h1 class="text-4xl font-mono text-terminal-green mb-8">Quero Ensinar</h1>
+    
+    <div class="grid md:grid-cols-3 gap-8 mb-12">
+      <Card title="Responsabilidades">
+        <ul class="space-y-2">
+          {responsibilities.map(item => (
+            <li>• {item}</li>
+          ))}
+        </ul>
+      </Card>
+
+      <Card title="Requisitos">
+        <ul class="space-y-2">
+          {requirements.map(item => (
+            <li>• {item}</li>
+          ))}
+        </ul>
+      </Card>
+
+      <Card title="Benefícios">
+        <ul class="space-y-2">
+          {benefits.map(item => (
+            <li>• {item}</li>
+          ))}
+        </ul>
+      </Card>
+    </div>
+
+    <Card title="Seja Mentor" className="mb-12">
+      <form id="mentor-form" class="space-y-6">
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="name">
+            Nome Completo
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            minlength="2"
+            maxlength="100"
+            pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+"
+            class="form-input"
+            placeholder="Seu nome completo"
+          />
+          <span class="text-red-500 text-sm hidden" data-error="name"></span>
+        </div>
+
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="email">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            maxlength="100"
+            class="form-input"
+            placeholder="seu@email.com"
+          />
+          <span class="text-red-500 text-sm hidden" data-error="email"></span>
+        </div>
+
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="linkedin">
+            LinkedIn
+          </label>
+          <input
+            type="url"
+            id="linkedin"
+            name="linkedin"
+            required
+            pattern="https:\/\/[a-z]{2,3}\.linkedin\.com\/.*"
+            class="form-input"
+            placeholder="https://linkedin.com/in/seu-perfil"
+          />
+          <span class="text-red-500 text-sm hidden" data-error="linkedin"></span>
+        </div>
+
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="expertise">
+            Área de Expertise
+          </label>
+          <select id="expertise" name="expertise" required class="form-input">
+            <option value="">Selecione sua área</option>
+            <option value="pentest">Pentest</option>
+            <option value="forense">Forense Digital</option>
+            <option value="malware">Análise de Malware</option>
+            <option value="cloud">Segurança em Cloud</option>
+            <option value="appsec">Segurança de Aplicações</option>
+            <option value="outro">Outro</option>
+          </select>
+          <span class="text-red-500 text-sm hidden" data-error="expertise"></span>
+        </div>
+
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="experience">
+            Anos de Experiência
+          </label>
+          <input
+            type="number"
+            id="experience"
+            name="experience"
+            required
+            min="1"
+            max="50"
+            class="form-input"
+          />
+          <span class="text-red-500 text-sm hidden" data-error="experience"></span>
+        </div>
+
+        <div>
+          <label class="block text-terminal-green font-mono mb-2" for="motivation">
+            Por que você quer ser mentor?
+          </label>
+          <textarea
+            id="motivation"
+            name="motivation"
+            required
+            minlength="10"
+            maxlength="1000"
+            class="form-input form-textarea"
+            placeholder="Conte-nos sua motivação"
+          ></textarea>
+          <span class="text-red-500 text-sm hidden" data-error="motivation"></span>
+          <div class="text-sm text-terminal-green mt-1">
+            <span id="motivation-length">0</span>/1000 caracteres
+          </div>
+        </div>
+
+        <div id="form-error" class="text-red-500 hidden"></div>
+        <div id="form-success" class="text-terminal-green hidden"></div>
+
+        <div>
+          <button type="submit" class="button" id="submit-button">
+            Enviar Candidatura
+          </button>
+        </div>
+      </form>
+    </Card>
+
+    <div class="text-center">
+      <p class="text-lg mb-4">Tem alguma dúvida?</p>
+      <a href="/contato" class="button bg-transparent border-2 border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-terminal-bg">
+        Entre em Contato
+      </a>
+    </div>
+  </div>
+</Layout>
+
+<script>
+const form = document.getElementById('mentor-form') as HTMLFormElement;
+const errorDiv = document.getElementById('form-error') as HTMLDivElement;
+const successDiv = document.getElementById('form-success') as HTMLDivElement;
+const submitButton = document.getElementById('submit-button') as HTMLButtonElement;
+const motivationTextarea = document.getElementById('motivation') as HTMLTextAreaElement;
+const motivationLength = document.getElementById('motivation-length') as HTMLSpanElement;
+
+// Character counter
+motivationTextarea?.addEventListener('input', () => {
+  const length = motivationTextarea.value.length;
+  if (motivationLength) {
+    motivationLength.textContent = length.toString();
+  }
+  
+  if (length > 1000) {
+    motivationTextarea.value = motivationTextarea.value.slice(0, 1000);
+    if (motivationLength) {
+      motivationLength.textContent = '1000';
+    }
+  }
+});
+
+// Clear error message when user starts typing
+form?.querySelectorAll('input, textarea, select').forEach(element => {
+  element.addEventListener('input', () => {
+    const errorSpan = form.querySelector(`[data-error="${element.id}"]`);
+    if (errorSpan) {
+      errorSpan.textContent = '';
+      errorSpan.classList.add('hidden');
+    }
+    errorDiv.classList.add('hidden');
+  });
+});
+
+form?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  // Reset messages
+  errorDiv.classList.add('hidden');
+  successDiv.classList.add('hidden');
+  form.querySelectorAll('[data-error]').forEach(el => {
+    el.textContent = '';
+    el.classList.add('hidden');
+  });
+  
+  // Disable submit button
+  submitButton.disabled = true;
+  submitButton.textContent = 'Enviando...';
+  
+  try {
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      subject: 'mentor',
+      message: `
+Nome: ${formData.get('name')}
+Email: ${formData.get('email')}
+LinkedIn: ${formData.get('linkedin')}
+Área de Expertise: ${formData.get('expertise')}
+Anos de Experiência: ${formData.get('experience')}
+Motivação: ${formData.get('motivation')}
+      `.trim()
+    };
+    
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Erro ao enviar candidatura');
+    }
+    
+    // Redirect to success page
+    window.location.href = '/contato/sucesso';
+    
+  } catch (error) {
+    console.error('Form submission error:', error);
+    let errorMessage = 'Erro ao enviar candidatura';
+    
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    
+    // Display the error message
+    errorDiv.textContent = errorMessage;
+    errorDiv.classList.remove('hidden');
+    
+  } finally {
+    // Re-enable submit button
+    submitButton.disabled = false;
+    submitButton.textContent = 'Enviar Candidatura';
+  }
+});
+</script>
