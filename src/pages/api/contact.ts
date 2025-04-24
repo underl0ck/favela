@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { ContactFormSchema, sendContactEmail } from '../../lib/email';
 import { checkRateLimit } from '../../lib/rate-limit';
+import { generateCSRFToken, validateCSRFToken } from '../../lib/csrf';
 
 export const POST: APIRoute = async ({ request }) => {
   const headers = {
@@ -8,6 +9,18 @@ export const POST: APIRoute = async ({ request }) => {
   };
 
   try {
+    // Validate CSRF token
+    const token = request.headers.get('X-CSRF-Token');
+    if (!token || !validateCSRFToken(token)) {
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Invalid CSRF token' 
+        }), 
+        { status: 403, headers }
+      );
+    }
+
     // Get client IP from request headers
     const forwardedFor = request.headers.get('x-forwarded-for');
     const clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : request.headers.get('x-real-ip') || '127.0.0.1';
@@ -44,7 +57,8 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: 'Email enviado com sucesso' 
+        message: 'Email enviado com sucesso',
+        csrfToken: generateCSRFToken() // Generate new token for next request
       }), 
       { status: 200, headers }
     );
