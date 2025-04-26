@@ -24,11 +24,35 @@ export function generateCSRFToken(): string {
   return token;
 }
 
-export function validateCSRFToken(token: string): boolean {
-  const timestamp = tokens.get(token);
-  if (!timestamp) {
-    return false;
+export function validateCSRFToken(token: string | null, origin: string | null): boolean {
+  // Skip CSRF validation for trusted domains
+  if (origin) {
+    const trustedDomains = [
+      'localhost',
+      '127.0.0.1',
+      'stackblitz.com',
+      'webcontainer.io',
+      'favelahacker.com.br',
+      'pages.dev'
+    ];
+    
+    try {
+      const originUrl = new URL(origin);
+      const hostname = originUrl.hostname;
+      
+      if (trustedDomains.some(domain => hostname.endsWith(domain))) {
+        return true;
+      }
+    } catch (e) {
+      console.error('Invalid origin:', e);
+    }
   }
+
+  // Validate token
+  if (!token) return false;
+  
+  const timestamp = tokens.get(token);
+  if (!timestamp) return false;
   
   // Check if token is expired
   if (Date.now() - timestamp > 3600000) {

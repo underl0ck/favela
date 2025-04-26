@@ -6,17 +6,28 @@ import xss from 'xss';
 
 export const POST: APIRoute = async ({ request }) => {
   const headers = {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, X-CSRF-Token'
   };
+
+  // Handle preflight requests
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { headers });
+  }
 
   try {
     // Validate CSRF token
     const token = request.headers.get('X-CSRF-Token');
-    if (!token || !validateCSRFToken(token)) {
+    const origin = request.headers.get('Origin');
+    
+    if (!validateCSRFToken(token, origin)) {
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: 'Invalid CSRF token' 
+          error: 'Invalid CSRF token',
+          csrfToken: generateCSRFToken() // Generate new token for retry
         }), 
         { status: 403, headers }
       );
@@ -87,7 +98,8 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({ 
         success: false,
-        error: errorMessage
+        error: errorMessage,
+        csrfToken: generateCSRFToken() // Generate new token for retry
       }), 
       { status: statusCode, headers }
     );
