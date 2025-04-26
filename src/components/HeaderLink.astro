@@ -4,14 +4,14 @@ import type { HTMLAttributes } from 'astro/types';
 type Props = HTMLAttributes<'a'>;
 
 const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+const pathname = Astro.url.pathname;
 const isActive = href === pathname || href === '/' + (pathname.match(/[^\/]+/g)?.[0] || '');
 ---
 
 <a
   href={href}
   class:list={[
-    'font-mono text-gray-300 hover:text-terminal-green transition-colors border-b-2 border-transparent',
+    'font-mono text-gray-300 hover:text-terminal-green transition-colors border-b-2 border-transparent whitespace-nowrap text-sm md:text-base',
     { 'text-terminal-green border-terminal-green': isActive },
   ]}
   {...props}
