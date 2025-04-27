@@ -1,5 +1,3 @@
-import { randomBytes, createHash } from 'node:crypto';
-
 // Use a Map to store token creation times
 const tokens = new Map<string, number>();
 
@@ -13,12 +11,23 @@ setInterval(() => {
   }
 }, 300000); // Clean every 5 minutes
 
-export function generateCSRFToken(): string {
+async function generateRandomBytes(length: number): Promise<string> {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function sha256(message: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+export async function generateCSRFToken(): Promise<string> {
   const timestamp = Date.now().toString();
-  const random = randomBytes(32).toString('hex');
-  const token = createHash('sha256')
-    .update(timestamp + random)
-    .digest('hex');
+  const random = await generateRandomBytes(32);
+  const token = await sha256(timestamp + random);
   
   tokens.set(token, Date.now());
   return token;
@@ -35,7 +44,7 @@ export function validateCSRFToken(token: string | null, origin: string | null): 
       'favelahacker.com.br',
       'pages.dev',
       'cloudflare.com',
-      'favela-eqw.pages.dev' // Add your specific Cloudflare Pages domain
+      'favela-eqw.pages.dev'
     ];
     
     try {
