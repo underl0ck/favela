@@ -92,10 +92,10 @@ function generateAutoReplyHTML(name: string) {
   return generateEmailTemplate('Recebemos sua mensagem - Favela Hacker', content);
 }
 
-export async function sendContactEmail(data: ContactForm, url: URL) {
+export async function sendContactEmail(data: ContactForm, url: URL, env: Record<string, string>) {
   try {
     // Get API key from environment variables
-    const apiKey = import.meta.env.RESEND_API_KEY;
+    const apiKey = env.RESEND_API_KEY;
     if (!apiKey) {
       console.error('Resend API key not found in environment variables');
       return { 
@@ -106,7 +106,7 @@ export async function sendContactEmail(data: ContactForm, url: URL) {
 
     const resend = new Resend(apiKey);
     const { name, email, subject } = data;
-    const domain = url.hostname || 'favelahacker.com.br';
+    const domain = env.RESEND_DOMAIN || url.hostname || 'favelahacker.com.br';
     const fromEmail = `Favela Hacker <contato@${domain}>`;
     
     // Send notification to admin

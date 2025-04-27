@@ -4,7 +4,7 @@ import { checkRateLimit } from '../../lib/rate-limit';
 import { generateCSRFToken, validateCSRFToken } from '../../lib/csrf';
 import xss from 'xss';
 
-export const POST: APIRoute = async ({ request, clientAddress, url }) => {
+export const POST: APIRoute = async ({ request, clientAddress, url, locals }) => {
   const headers = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': request.headers.get('Origin') || '*',
@@ -99,8 +99,8 @@ export const POST: APIRoute = async ({ request, clientAddress, url }) => {
       );
     }
     
-    // Send email
-    const result = await sendContactEmail(validatedData, url);
+    // Send email with environment variables from context
+    const result = await sendContactEmail(validatedData, url, locals.runtime.env);
     
     if (!result.success) {
       return new Response(
