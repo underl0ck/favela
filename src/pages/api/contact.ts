@@ -21,6 +21,19 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
+    // Check if Resend API key is configured
+    if (!import.meta.env.RESEND_API_KEY) {
+      console.error('Resend API key not configured');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Serviço temporariamente indisponível. Por favor, tente novamente mais tarde.',
+          csrfToken: await generateCSRFToken()
+        }),
+        { status: 503, headers }
+      );
+    }
+
     // Get client IP from request headers
     const forwardedFor = request.headers.get('cf-connecting-ip') || 
                         request.headers.get('x-forwarded-for') ||
@@ -36,7 +49,13 @@ export const POST: APIRoute = async ({ request }) => {
           error: rateLimit.error,
           csrfToken: await generateCSRFToken()
         }), 
-        { status: 429, headers }
+        { 
+          status: 429, 
+          headers: {
+            ...headers,
+            'Retry-After': rateLimit.retryAfter?.toString() || '1800'
+          }
+        }
       );
     }
 
@@ -48,14 +67,26 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: 'Invalid CSRF token',
+          error: 'Sessão expirada. Por favor, recarregue a página e tente novamente.',
           csrfToken: await generateCSRFToken()
         }), 
         { status: 403, headers }
       );
     }
 
-    const data = await request.json();
+    let data;
+    try {
+      data = await request.json();
+    } catch (error) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Dados inválidos enviados',
+          csrfToken: await generateCSRFToken()
+        }),
+        { status: 400, headers }
+      );
+    }
     
     // Sanitize input data
     const sanitizedData = {
