@@ -33,7 +33,8 @@ export function validateCSRFToken(token: string | null, origin: string | null): 
       'stackblitz.com',
       'webcontainer.io',
       'favelahacker.com.br',
-      'favela-eqw.pages.dev'
+      'pages.dev',
+      'cloudflare.com'
     ];
     
     try {
