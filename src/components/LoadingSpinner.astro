@@ -1,9 +1,10 @@
 ---
 interface Props {
   size?: 'sm' | 'md' | 'lg';
+  text?: string;
 }
 
-const { size = 'md' } = Astro.props;
+const { size = 'md', text = 'Carregando...' } = Astro.props;
 
 const sizeClasses = {
   sm: 'w-4 h-4',
@@ -12,6 +13,7 @@ const sizeClasses = {
 };
 ---
 
-<div class="flex justify-center items-center">
-  <div class={`animate-spin rounded-full border-4 border-terminal-green border-t-transparent ${sizeClasses[size]}`}></div>
+<div class="flex flex-col items-center justify-center gap-4" role="status">
+  <div class={`animate-spin rounded-full border-4 border-terminal-green border-t-transparent ${sizeClasses[size]}`} aria-hidden="true"></div>
+  {text && <p class="sr-only">{text}</p>}
 </div>

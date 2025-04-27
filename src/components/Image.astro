@@ -5,26 +5,33 @@ interface Props {
   className?: string;
   width?: number;
   height?: number;
-  loading?: "eager" | "lazy";
+  loading?: 'lazy' | 'eager';
+  decoding?: 'async' | 'sync' | 'auto';
 }
 
 const { 
   src, 
   alt, 
   className = '', 
-  width, 
+  width,
   height,
-  loading = "lazy"
+  loading = 'lazy',
+  decoding = 'async'
 } = Astro.props;
 
+// Add image optimization parameters for Pexels images
+const optimizedSrc = src.startsWith('https://images.pexels.com') 
+  ? `${src}${src.includes('?') ? '&' : '?'}auto=compress&cs=tinysrgb&w=${width || 800}&h=${height || 600}&dpr=1` 
+  : src;
+
 const imageProps = {
-  src,
+  src: optimizedSrc,
   alt,
   width,
   height,
-  loading,
   class: `${className} transition-opacity`,
-  decoding: "async" as const,
+  loading,
+  decoding,
 };
 ---
 
