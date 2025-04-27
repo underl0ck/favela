@@ -25,45 +25,31 @@ function getSubjectLabel(subject: string): string {
   return subjects[subject as keyof typeof subjects] || subject;
 }
 
-function generateEmailHTML(data: ContactForm) {
-  const { name, email, subject, message } = data;
+const emailStyles = `
+  body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+  .header { background: #00ff00; color: #000; padding: 20px; text-align: center; }
+  .content { padding: 20px; background: #f9f9f9; }
+  .field { margin-bottom: 15px; }
+  .label { font-weight: bold; }
+`;
+
+function generateEmailTemplate(title: string, content: string) {
   return `
     <!DOCTYPE html>
     <html>
       <head>
         <meta charset="utf-8">
-        <title>Novo Contato - Favela Hacker</title>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #00ff00; color: #000; padding: 20px; text-align: center; }
-          .content { padding: 20px; background: #f9f9f9; }
-          .field { margin-bottom: 15px; }
-          .label { font-weight: bold; }
-        </style>
+        <title>${title}</title>
+        <style>${emailStyles}</style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>Novo Contato - Favela Hacker</h1>
+            <h1>${title}</h1>
           </div>
           <div class="content">
-            <div class="field">
-              <div class="label">Nome:</div>
-              <div>${name}</div>
-            </div>
-            <div class="field">
-              <div class="label">Email:</div>
-              <div>${email}</div>
-            </div>
-            <div class="field">
-              <div class="label">Assunto:</div>
-              <div>${getSubjectLabel(subject)}</div>
-            </div>
-            <div class="field">
-              <div class="label">Mensagem:</div>
-              <div>${message}</div>
-            </div>
+            ${content}
           </div>
         </div>
       </body>
@@ -71,40 +57,42 @@ function generateEmailHTML(data: ContactForm) {
   `;
 }
 
-function generateAutoReplyHTML(name: string) {
-  return `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Recebemos sua mensagem - Favela Hacker</title>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #00ff00; color: #000; padding: 20px; text-align: center; }
-          .content { padding: 20px; background: #f9f9f9; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>Recebemos sua mensagem!</h1>
-          </div>
-          <div class="content">
-            <p>Olá ${name},</p>
-            <p>Obrigado por entrar em contato com o Favela Hacker!</p>
-            <p>Esta é uma confirmação automática de que recebemos sua mensagem. Nossa equipe irá analisar e responder em até 24 horas úteis.</p>
-            <p>Enquanto isso, que tal conhecer mais sobre nosso trabalho?</p>
-            <ul>
-              <li>Visite nosso blog: <a href="https://favelahacker.com.br/blog">favelahacker.com.br/blog</a></li>
-              <li>Siga-nos nas redes sociais: @favelahacker</li>
-            </ul>
-            <p>Atenciosamente,<br>Equipe Favela Hacker</p>
-          </div>
-        </div>
-      </body>
-    </html>
+function generateEmailHTML(data: ContactForm) {
+  const { name, email, subject, message } = data;
+  const content = `
+    <div class="field">
+      <div class="label">Nome:</div>
+      <div>${name}</div>
+    </div>
+    <div class="field">
+      <div class="label">Email:</div>
+      <div>${email}</div>
+    </div>
+    <div class="field">
+      <div class="label">Assunto:</div>
+      <div>${getSubjectLabel(subject)}</div>
+    </div>
+    <div class="field">
+      <div class="label">Mensagem:</div>
+      <div>${message}</div>
+    </div>
   `;
+  return generateEmailTemplate('Novo Contato - Favela Hacker', content);
+}
+
+function generateAutoReplyHTML(name: string) {
+  const content = `
+    <p>Olá ${name},</p>
+    <p>Obrigado por entrar em contato com o Favela Hacker!</p>
+    <p>Esta é uma confirmação automática de que recebemos sua mensagem. Nossa equipe irá analisar e responder em até 24 horas úteis.</p>
+    <p>Enquanto isso, que tal conhecer mais sobre nosso trabalho?</p>
+    <ul>
+      <li>Visite nosso blog: <a href="https://favelahacker.com.br/blog">favelahacker.com.br/blog</a></li>
+      <li>Siga-nos nas redes sociais: @favelahacker</li>
+    </ul>
+    <p>Atenciosamente,<br>Equipe Favela Hacker</p>
+  `;
+  return generateEmailTemplate('Recebemos sua mensagem - Favela Hacker', content);
 }
 
 export async function sendContactEmail(data: ContactForm) {
