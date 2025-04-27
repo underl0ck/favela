@@ -9,7 +9,8 @@ export const POST: APIRoute = async ({ request }) => {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-CSRF-Token'
+    'Access-Control-Allow-Headers': 'Content-Type, X-CSRF-Token',
+    'Access-Control-Max-Age': '86400' // 24 hours
   };
 
   // Handle preflight requests
@@ -23,6 +24,7 @@ export const POST: APIRoute = async ({ request }) => {
     const origin = request.headers.get('Origin');
     
     if (!validateCSRFToken(token, origin)) {
+      console.error('CSRF validation failed:', { token, origin });
       return new Response(
         JSON.stringify({ 
           success: false, 
@@ -43,7 +45,8 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: rateLimit.error 
+          error: rateLimit.error,
+          csrfToken: generateCSRFToken()
         }), 
         { status: 429, headers }
       );
@@ -68,7 +71,8 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ 
           success: false,
-          error: result.error || 'Erro ao enviar email'
+          error: result.error || 'Erro ao enviar email',
+          csrfToken: generateCSRFToken()
         }), 
         { status: 500, headers }
       );

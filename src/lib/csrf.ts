@@ -34,14 +34,21 @@ export function validateCSRFToken(token: string | null, origin: string | null): 
       'webcontainer.io',
       'favelahacker.com.br',
       'pages.dev',
-      'cloudflare.com'
+      'cloudflare.com',
+      'favela-eqw.pages.dev' // Add your specific Cloudflare Pages domain
     ];
     
     try {
       const originUrl = new URL(origin);
       const hostname = originUrl.hostname;
       
-      if (trustedDomains.some(domain => hostname.endsWith(domain))) {
+      // Check if hostname matches any trusted domain or ends with trusted TLD
+      const isTrusted = trustedDomains.some(domain => 
+        hostname === domain || 
+        hostname.endsWith(`.${domain}`)
+      );
+      
+      if (isTrusted) {
         return true;
       }
     } catch (e) {
