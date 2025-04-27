@@ -21,15 +21,15 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    // Check if Resend API key is configured
+    // Verify Resend API key is configured
     if (!import.meta.env.RESEND_API_KEY) {
       console.error('Resend API key not configured');
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Serviço temporariamente indisponível. Por favor, tente novamente mais tarde.',
+        JSON.stringify({ 
+          success: false, 
+          error: 'Service temporarily unavailable. Please try again later.',
           csrfToken: await generateCSRFToken()
-        }),
+        }), 
         { status: 503, headers }
       );
     }
@@ -67,23 +67,24 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: 'Sessão expirada. Por favor, recarregue a página e tente novamente.',
+          error: 'Invalid request token',
           csrfToken: await generateCSRFToken()
         }), 
         { status: 403, headers }
       );
     }
 
+    // Parse and validate request body
     let data;
     try {
       data = await request.json();
-    } catch (error) {
+    } catch (e) {
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Dados inválidos enviados',
+        JSON.stringify({ 
+          success: false, 
+          error: 'Invalid request format',
           csrfToken: await generateCSRFToken()
-        }),
+        }), 
         { status: 400, headers }
       );
     }
@@ -97,15 +98,28 @@ export const POST: APIRoute = async ({ request }) => {
     };
     
     // Validate sanitized data
-    const validatedData = ContactFormSchema.parse(sanitizedData);
+    let validatedData;
+    try {
+      validatedData = ContactFormSchema.parse(sanitizedData);
+    } catch (e) {
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Invalid form data',
+          csrfToken: await generateCSRFToken()
+        }), 
+        { status: 400, headers }
+      );
+    }
     
+    // Send email
     const result = await sendContactEmail(validatedData);
     
     if (!result.success) {
       return new Response(
         JSON.stringify({ 
           success: false,
-          error: result.error || 'Erro ao enviar email',
+          error: result.error || 'Failed to send email',
           csrfToken: await generateCSRFToken()
         }), 
         { status: 500, headers }
@@ -115,7 +129,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: 'Email enviado com sucesso',
+        message: 'Email sent successfully',
         csrfToken: await generateCSRFToken()
       }), 
       { status: 200, headers }
@@ -124,22 +138,13 @@ export const POST: APIRoute = async ({ request }) => {
   } catch (error) {
     console.error('Error processing contact form:', error);
     
-    let errorMessage = 'Erro ao processar requisição';
-    let statusCode = 400;
-    
-    if (error instanceof SyntaxError) {
-      errorMessage = 'Dados inválidos enviados';
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-
     return new Response(
       JSON.stringify({ 
         success: false,
-        error: errorMessage,
+        error: 'An unexpected error occurred',
         csrfToken: await generateCSRFToken()
       }), 
-      { status: statusCode, headers }
+      { status: 500, headers }
     );
   }
 };

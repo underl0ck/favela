@@ -94,20 +94,18 @@ function generateAutoReplyHTML(name: string) {
 
 export async function sendContactEmail(data: ContactForm) {
   try {
-    const apiKey = import.meta.env.RESEND_API_KEY;
+    // Get API key from environment
+    const apiKey = process.env.RESEND_API_KEY || import.meta.env.RESEND_API_KEY;
+    
     if (!apiKey) {
-      console.error('RESEND_API_KEY is not set in environment variables');
-      return { 
-        success: false, 
-        error: 'Configuração de email não encontrada. Por favor, tente novamente mais tarde.' 
-      };
+      throw new Error('Resend API key not configured');
     }
 
     // Initialize Resend with API key
     const resend = new Resend(apiKey);
 
     const { name, email, subject } = data;
-    const domain = import.meta.env.RESEND_DOMAIN || 'favelahacker.com.br';
+    const domain = process.env.RESEND_DOMAIN || import.meta.env.RESEND_DOMAIN || 'favelahacker.com.br';
     const fromEmail = `Favela Hacker <contato@${domain}>`;
     
     // Send notification to admin
