@@ -1,13 +1,6 @@
 import { Resend } from 'resend';
 import { z } from 'zod';
 
-// Add debug logging
-function debugEnvironment() {
-  console.log('Checking Resend configuration...');
-  console.log('RESEND_API_KEY exists:', !!import.meta.env.RESEND_API_KEY);
-  console.log('RESEND_DOMAIN:', import.meta.env.RESEND_DOMAIN);
-}
-
 export const ContactFormSchema = z.object({
   name: z.string().min(2, 'Nome muito curto').max(100, 'Nome muito longo'),
   email: z.string().email('Email inválido').max(100, 'Email muito longo'),
@@ -99,32 +92,25 @@ function generateAutoReplyHTML(name: string) {
   return generateEmailTemplate('Recebemos sua mensagem - Favela Hacker', content);
 }
 
-// Initialize Resend with API key
-let resend: Resend | null = null;
-
-function getResendClient() {
-  if (!resend) {
-    debugEnvironment(); // Add debug logging
+export async function sendContactEmail(data: ContactForm, url: URL) {
+  try {
+    // Get API key from environment variables
     const apiKey = import.meta.env.RESEND_API_KEY;
     if (!apiKey) {
-      throw new Error('Resend API key not configured');
+      console.error('Resend API key not found in environment variables');
+      return { 
+        success: false, 
+        error: 'Email service configuration error' 
+      };
     }
-    resend = new Resend(apiKey);
-  }
-  return resend;
-}
 
-export async function sendContactEmail(data: ContactForm) {
-  try {
-    const client = getResendClient();
+    const resend = new Resend(apiKey);
     const { name, email, subject } = data;
-    const domain = import.meta.env.RESEND_DOMAIN || 'favelahacker.com.br';
+    const domain = url.hostname || 'favelahacker.com.br';
     const fromEmail = `Favela Hacker <contato@${domain}>`;
     
-    console.log('Attempting to send email...');
-    
     // Send notification to admin
-    await client.emails.send({
+    await resend.emails.send({
       from: fromEmail,
       to: [`contato@${domain}`],
       reply_to: email,
@@ -139,7 +125,7 @@ Mensagem: ${data.message}
     });
 
     // Send auto-reply to user
-    await client.emails.send({
+    await resend.emails.send({
       from: fromEmail,
       to: [email],
       subject: 'Recebemos sua mensagem - Favela Hacker',
@@ -160,7 +146,6 @@ Equipe Favela Hacker
       `,
     });
 
-    console.log('Email sent successfully');
     return { success: true };
   } catch (error) {
     console.error('Error sending email:', error);

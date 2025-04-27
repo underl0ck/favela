@@ -4,7 +4,7 @@ import { checkRateLimit } from '../../lib/rate-limit';
 import { generateCSRFToken, validateCSRFToken } from '../../lib/csrf';
 import xss from 'xss';
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, clientAddress, url }) => {
   const headers = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': request.headers.get('Origin') || '*',
@@ -21,30 +21,11 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    // Check if Resend API key is configured
-    if (!import.meta.env.RESEND_API_KEY) {
-      console.error('Resend API key not configured in environment');
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Email service is not configured. Please try again later.',
-          csrfToken: await generateCSRFToken()
-        }), 
-        { 
-          status: 503, 
-          headers: {
-            ...headers,
-            'Retry-After': '3600' // Try again in 1 hour
-          }
-        }
-      );
-    }
-
-    // Get client IP from request headers
+    // Get client IP from request headers or clientAddress
     const forwardedFor = request.headers.get('cf-connecting-ip') || 
                         request.headers.get('x-forwarded-for') ||
                         request.headers.get('x-real-ip');
-    const clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : '127.0.0.1';
+    const clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : clientAddress;
     
     // Check rate limit
     const rateLimit = await checkRateLimit(clientIp);
@@ -119,7 +100,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
     
     // Send email
-    const result = await sendContactEmail(validatedData);
+    const result = await sendContactEmail(validatedData, url);
     
     if (!result.success) {
       return new Response(
