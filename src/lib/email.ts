@@ -92,24 +92,29 @@ function generateAutoReplyHTML(name: string) {
   return generateEmailTemplate('Recebemos sua mensagem - Favela Hacker', content);
 }
 
-export async function sendContactEmail(data: ContactForm) {
-  try {
-    // Get API key from environment
-    const apiKey = process.env.RESEND_API_KEY || import.meta.env.RESEND_API_KEY;
-    
+// Initialize Resend with API key
+let resend: Resend | null = null;
+
+function getResendClient() {
+  if (!resend) {
+    const apiKey = import.meta.env.RESEND_API_KEY;
     if (!apiKey) {
       throw new Error('Resend API key not configured');
     }
+    resend = new Resend(apiKey);
+  }
+  return resend;
+}
 
-    // Initialize Resend with API key
-    const resend = new Resend(apiKey);
-
+export async function sendContactEmail(data: ContactForm) {
+  try {
+    const client = getResendClient();
     const { name, email, subject } = data;
-    const domain = process.env.RESEND_DOMAIN || import.meta.env.RESEND_DOMAIN || 'favelahacker.com.br';
+    const domain = import.meta.env.RESEND_DOMAIN || 'favelahacker.com.br';
     const fromEmail = `Favela Hacker <contato@${domain}>`;
     
     // Send notification to admin
-    await resend.emails.send({
+    await client.emails.send({
       from: fromEmail,
       to: [`contato@${domain}`],
       reply_to: email,
@@ -124,7 +129,7 @@ Mensagem: ${data.message}
     });
 
     // Send auto-reply to user
-    await resend.emails.send({
+    await client.emails.send({
       from: fromEmail,
       to: [email],
       subject: 'Recebemos sua mensagem - Favela Hacker',
