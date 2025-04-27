@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
-import Image from '../components/Image.astro';
+import { Image } from 'astro:assets';
 
 const stats = [
   { number: '100+', label: 'Alunos Formados' },
@@ -40,6 +40,48 @@ const methodology = [
     'Hackathons e desafios práticos'
   ]}
 ];
+
+const founders = [
+  {
+    name: 'Fernandoo Cardoso (Underl0ck)',
+    role: 'CEO & Co-fundadora',
+    bio: 'Especialista em segurança com mais de 10 anos de experiência. Consultor de seguranca internacional e defensor da inclusão em tecnologia.',
+    image: '/fernando_linkedin.jpeg'
+  },
+  {
+    name: 'Thiago Laurito (Sl4ck)',
+    role: 'CTO & Co-fundador',
+    bio: 'Pesquisador de segurança e infraestrutura com mais de 20 anos de experiência. Contribuidor ativo de projetos open source e mentor de jovens talentos.',
+    image: '/thiago_linkedin.jpeg'
+  }
+];
+
+const mentors = [
+  {
+    name: 'William Lopes (B1zzy)',
+    role: 'Mentora Sênior - Pentest',
+    company: 'SecureNet Labs',
+    image: '/willian_linkedin.jpeg'
+  },
+  {
+    name: 'Ana Cristina (Aninha)',
+    role: 'Mentora - AppSec',
+    company: 'SafeCode',
+    image: '/blog-placeholder-5.jpg'
+  },
+  {
+    name: 'Lucas Ferreira',
+    role: 'Mentor - Defensive Security',
+    company: 'CloudShield',
+    image: '/blog-placeholder-about.jpg'
+  },
+  {
+    name: 'Odenis',
+    role: 'Mentor - Cloud Security',
+    company: 'CloudShield',
+    image: '/blog-placeholder-about.jpg'
+  }
+];
 ---
 
 <Layout 
@@ -49,16 +91,20 @@ const methodology = [
   <div class="max-w-4xl mx-auto">
     <div class="mb-12">
       <Image
-        src="https://images.pexels.com/photos/5473951/pexels-photo-5473951.jpeg"
-        alt="Imagem Favela"
-        className="w-full h-96 object-cover rounded-lg mb-8"
+        src="https://images.pexels.com/photos/3861964/pexels-photo-3861964.jpeg"
+        alt="Estudantes em aula de tecnologia"
+        width={1200}
+        height={600}
+        class="w-full h-96 object-cover rounded-lg mb-8"
+        loading="eager"
+        decoding="sync"
       />
       <h1 class="text-4xl font-mono text-terminal-green mb-6">Nossa História</h1>
       <Card title="Sobre Nós">
         <p class="text-lg">
           O Favela Hacker nasceu da necessidade de democratizar o conhecimento em cibersegurança
           e criar oportunidades reais para jovens talentosos de comunidades. Nossa jornada começou
-          em 2010, quando um grupo de profissionais de segurança da informação decidiu compartilhar
+          em 2023, quando um grupo de profissionais de segurança da informação decidiu compartilhar
           seu conhecimento com jovens de comunidades que não teriam acesso a essa formação.
         </p>
       </Card>
@@ -76,6 +122,52 @@ const methodology = [
         <Card title="Oportunidades">
           Criar pontes entre nossos alunos e o mercado de trabalho em tecnologia
         </Card>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-3xl font-mono text-terminal-green mb-6">Fundadores</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        {founders.map(founder => (
+          <Card title={founder.name}>
+            <div class="flex flex-col items-center text-center">
+              <Image
+                src={founder.image}
+                alt={founder.name}
+                width={200}
+                height={200}
+                class="w-32 h-32 rounded-full mb-4 object-cover"
+                loading="lazy"
+              />
+              <p class="text-terminal-green font-mono mb-2">{founder.role}</p>
+              <p class="text-sm">{founder.bio}</p>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-3xl font-mono text-terminal-green mb-6">Mentores</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        {mentors.map(mentor => (
+          <Card title={mentor.name}>
+            <div class="flex items-center gap-4">
+              <Image
+                src={mentor.image}
+                alt={mentor.name}
+                width={100}
+                height={100}
+                class="w-16 h-16 rounded-full object-cover"
+                loading="lazy"
+              />
+              <div>
+                <p class="text-terminal-green font-mono">{mentor.role}</p>
+                <p class="text-sm opacity-75">{mentor.company}</p>
+              </div>
+            </div>
+          </Card>
+        ))}
       </div>
     </section>
 
@@ -136,3 +228,4 @@ const methodology = [
     </section>
   </div>
 </Layout>
+---
