@@ -1,7 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
-import Image from '../components/Image.astro';
+import { Image } from 'astro:assets';
+import { generateCSRFToken } from '../lib/csrf';
 
 const benefits = [
   'Curso gratuito de 6 meses',
@@ -38,6 +39,9 @@ const process = [
     description: 'Começo das aulas na próxima turma'
   }
 ];
+
+// Generate initial CSRF token
+const csrfToken = await generateCSRFToken();
 ---
 
 <Layout
@@ -46,9 +50,13 @@ const process = [
 >
   <div class="max-w-4xl mx-auto">
     <Image
-      src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg"
-      alt="Estudantes do Favela Hacker"
-      className="w-full h-64 object-cover rounded-lg mb-8"
+      src="https://images.pexels.com/photos/5896659/pexels-photo-5896659.jpeg"
+      alt="Estudantes do Favela Hacker aprendendo tecnologia"
+      width={1200}
+      height={600}
+      class="w-full h-64 object-cover rounded-lg mb-8"
+      loading="eager"
+      decoding="sync"
     />
     
     <h1 class="text-4xl font-mono text-terminal-green mb-8">Quero Aprender</h1>
@@ -83,7 +91,7 @@ const process = [
     </section>
 
     <Card title="Inscreva-se" className="mb-12">
-      <form id="enrollment-form" class="space-y-6">
+      <form id="enrollment-form" class="space-y-6" data-csrf-token={csrfToken}>
         <div>
           <label class="block text-terminal-green font-mono mb-2" for="name">
             Nome Completo
@@ -98,6 +106,7 @@ const process = [
             pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+"
             class="form-input"
             placeholder="Seu nome completo"
+            autocomplete="name"
           />
           <span class="text-red-500 text-sm hidden" data-error="name"></span>
         </div>
@@ -114,6 +123,7 @@ const process = [
             maxlength="100"
             class="form-input"
             placeholder="seu@email.com"
+            autocomplete="email"
           />
           <span class="text-red-500 text-sm hidden" data-error="email"></span>
         </div>
@@ -130,6 +140,7 @@ const process = [
             min="16"
             max="100"
             class="form-input"
+            autocomplete="off"
           />
           <span class="text-red-500 text-sm hidden" data-error="age"></span>
         </div>
@@ -147,6 +158,7 @@ const process = [
             maxlength="100"
             class="form-input"
             placeholder="Nome da sua comunidade"
+            autocomplete="address-level2"
           />
           <span class="text-red-500 text-sm hidden" data-error="community"></span>
         </div>
@@ -163,6 +175,7 @@ const process = [
             maxlength="1000"
             class="form-input form-textarea"
             placeholder="Conte-nos sua motivação"
+            autocomplete="off"
           ></textarea>
           <span class="text-red-500 text-sm hidden" data-error="motivation"></span>
           <div class="text-sm text-terminal-green mt-1">
@@ -198,19 +211,23 @@ const submitButton = document.getElementById('submit-button') as HTMLButtonEleme
 const motivationTextarea = document.getElementById('motivation') as HTMLTextAreaElement;
 const motivationLength = document.getElementById('motivation-length') as HTMLSpanElement;
 
-// Character counter
+// Character counter with debounce
+let timeoutId: ReturnType<typeof setTimeout>;
 motivationTextarea?.addEventListener('input', () => {
-  const length = motivationTextarea.value.length;
-  if (motivationLength) {
-    motivationLength.textContent = length.toString();
-  }
-  
-  if (length > 1000) {
-    motivationTextarea.value = motivationTextarea.value.slice(0, 1000);
+  clearTimeout(timeoutId);
+  timeoutId = setTimeout(() => {
+    const length = motivationTextarea.value.length;
     if (motivationLength) {
-      motivationLength.textContent = '1000';
+      motivationLength.textContent = length.toString();
     }
-  }
+    
+    if (length > 1000) {
+      motivationTextarea.value = motivationTextarea.value.slice(0, 1000);
+      if (motivationLength) {
+        motivationLength.textContent = '1000';
+      }
+    }
+  }, 100);
 });
 
 // Clear error message when user starts typing
@@ -225,6 +242,33 @@ form?.querySelectorAll('input, textarea').forEach(element => {
   });
 });
 
+// Form submission with retry logic
+async function submitForm(data: any, retries = 3): Promise<Response> {
+  try {
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': form.dataset.csrfToken || ''
+      },
+      body: JSON.stringify(data)
+    });
+    
+    if (!response.ok && retries > 0 && response.status >= 500) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return submitForm(data, retries - 1);
+    }
+    
+    return response;
+  } catch (error) {
+    if (retries > 0) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return submitForm(data, retries - 1);
+    }
+    throw error;
+  }
+}
+
 form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   
@@ -236,12 +280,20 @@ form?.addEventListener('submit', async (e) => {
     el.classList.add('hidden');
   });
   
-  // Disable submit button
+  // Basic client-side validation
+  const formData = new FormData(form);
+  const age = parseInt(formData.get('age') as string);
+  if (age < 16 || age > 100) {
+    errorDiv.textContent = 'Idade deve estar entre 16 e 100 anos';
+    errorDiv.classList.remove('hidden');
+    return;
+  }
+  
+  // Disable submit button and show loading state
   submitButton.disabled = true;
-  submitButton.textContent = 'Enviando...';
+  submitButton.innerHTML = '<span class="animate-pulse">Enviando...</span>';
   
   try {
-    const formData = new FormData(form);
     const data = {
       name: formData.get('name'),
       email: formData.get('email'),
@@ -255,18 +307,16 @@ Motivação: ${formData.get('motivation')}
       `.trim()
     };
     
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
+    const response = await submitForm(data);
     const result = await response.json();
     
     if (!response.ok || !result.success) {
       throw new Error(result.error || 'Erro ao enviar inscrição');
+    }
+
+    // Update CSRF token for next request
+    if (result.csrfToken) {
+      form.dataset.csrfToken = result.csrfToken;
     }
     
     // Redirect to success page
@@ -289,5 +339,10 @@ Motivação: ${formData.get('motivation')}
     submitButton.disabled = false;
     submitButton.textContent = 'Enviar Inscrição';
   }
+});
+
+// Cleanup on page unload
+window.addEventListener('unload', () => {
+  clearTimeout(timeoutId);
 });
 </script>
