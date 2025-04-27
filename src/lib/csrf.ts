@@ -1,16 +1,6 @@
 // Use a Map to store token creation times
 const tokens = new Map<string, number>();
 
-// Clean up expired tokens periodically
-setInterval(() => {
-  const now = Date.now();
-  for (const [token, timestamp] of tokens) {
-    if (now - timestamp > 3600000) { // 1 hour expiry
-      tokens.delete(token);
-    }
-  }
-}, 300000); // Clean every 5 minutes
-
 async function generateRandomBytes(length: number): Promise<string> {
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);
@@ -29,7 +19,15 @@ export async function generateCSRFToken(): Promise<string> {
   const random = await generateRandomBytes(32);
   const token = await sha256(timestamp + random);
   
-  tokens.set(token, Date.now());
+  // Clean up expired tokens before adding new one
+  const now = Date.now();
+  for (const [existingToken, tokenTimestamp] of tokens) {
+    if (now - tokenTimestamp > 3600000) { // 1 hour expiry
+      tokens.delete(existingToken);
+    }
+  }
+  
+  tokens.set(token, now);
   return token;
 }
 

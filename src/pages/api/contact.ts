@@ -21,28 +21,6 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    // Log request details for debugging
-    console.log('Request headers:', Object.fromEntries(request.headers.entries()));
-    console.log('Request URL:', request.url);
-
-    // Validate CSRF token
-    const token = request.headers.get('X-CSRF-Token');
-    const origin = request.headers.get('Origin');
-    
-    console.log('CSRF validation:', { token, origin });
-
-    if (!validateCSRFToken(token, origin)) {
-      console.error('CSRF validation failed:', { token, origin });
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Invalid CSRF token',
-          csrfToken: generateCSRFToken()
-        }), 
-        { status: 403, headers }
-      );
-    }
-
     // Get client IP from request headers
     const forwardedFor = request.headers.get('cf-connecting-ip') || 
                         request.headers.get('x-forwarded-for') ||
@@ -56,9 +34,24 @@ export const POST: APIRoute = async ({ request }) => {
         JSON.stringify({ 
           success: false, 
           error: rateLimit.error,
-          csrfToken: generateCSRFToken()
+          csrfToken: await generateCSRFToken()
         }), 
         { status: 429, headers }
+      );
+    }
+
+    // Validate CSRF token
+    const token = request.headers.get('X-CSRF-Token');
+    const origin = request.headers.get('Origin');
+    
+    if (!validateCSRFToken(token, origin)) {
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Invalid CSRF token',
+          csrfToken: await generateCSRFToken()
+        }), 
+        { status: 403, headers }
       );
     }
 
@@ -82,7 +75,7 @@ export const POST: APIRoute = async ({ request }) => {
         JSON.stringify({ 
           success: false,
           error: result.error || 'Erro ao enviar email',
-          csrfToken: generateCSRFToken()
+          csrfToken: await generateCSRFToken()
         }), 
         { status: 500, headers }
       );
@@ -92,7 +85,7 @@ export const POST: APIRoute = async ({ request }) => {
       JSON.stringify({ 
         success: true,
         message: 'Email enviado com sucesso',
-        csrfToken: generateCSRFToken()
+        csrfToken: await generateCSRFToken()
       }), 
       { status: 200, headers }
     );
@@ -113,7 +106,7 @@ export const POST: APIRoute = async ({ request }) => {
       JSON.stringify({ 
         success: false,
         error: errorMessage,
-        csrfToken: generateCSRFToken()
+        csrfToken: await generateCSRFToken()
       }), 
       { status: statusCode, headers }
     );
