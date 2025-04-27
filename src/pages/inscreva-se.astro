@@ -103,7 +103,6 @@ const csrfToken = await generateCSRFToken();
             required
             minlength="2"
             maxlength="100"
-            pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+"
             class="form-input"
             placeholder="Seu nome completo"
             autocomplete="name"
@@ -179,7 +178,7 @@ const csrfToken = await generateCSRFToken();
           ></textarea>
           <span class="text-red-500 text-sm hidden" data-error="motivation"></span>
           <div class="text-sm text-terminal-green mt-1">
-            <span id="motivation-length">0</span>/1000 caracteres
+            <span id="message-length">0</span>/1000 caracteres
           </div>
         </div>
 
@@ -211,6 +210,13 @@ const submitButton = document.getElementById('submit-button') as HTMLButtonEleme
 const motivationTextarea = document.getElementById('motivation') as HTMLTextAreaElement;
 const motivationLength = document.getElementById('motivation-length') as HTMLSpanElement;
 
+// Name validation function
+function validateName(name: string): boolean {
+  // Allow letters, spaces, and accented characters
+  const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s']+$/;
+  return nameRegex.test(name) && name.length >= 2 && name.length <= 100;
+}
+
 // Character counter with debounce
 let timeoutId: ReturnType<typeof setTimeout>;
 motivationTextarea?.addEventListener('input', () => {
@@ -231,7 +237,7 @@ motivationTextarea?.addEventListener('input', () => {
 });
 
 // Clear error message when user starts typing
-form?.querySelectorAll('input, textarea').forEach(element => {
+form?.querySelectorAll('input, textarea, select').forEach(element => {
   element.addEventListener('input', () => {
     const errorSpan = form.querySelector(`[data-error="${element.id}"]`);
     if (errorSpan) {
@@ -282,10 +288,26 @@ form?.addEventListener('submit', async (e) => {
   
   // Basic client-side validation
   const formData = new FormData(form);
+  const name = formData.get('name') as string;
   const age = parseInt(formData.get('age') as string);
+
+  // Validate name
+  if (!validateName(name)) {
+    const nameError = form.querySelector('[data-error="name"]');
+    if (nameError) {
+      nameError.textContent = 'Nome deve conter apenas letras e espaços';
+      nameError.classList.remove('hidden');
+    }
+    return;
+  }
+
+  // Validate age
   if (age < 16 || age > 100) {
-    errorDiv.textContent = 'Idade deve estar entre 16 e 100 anos';
-    errorDiv.classList.remove('hidden');
+    const ageError = form.querySelector('[data-error="age"]');
+    if (ageError) {
+      ageError.textContent = 'Idade deve estar entre 16 e 100 anos';
+      ageError.classList.remove('hidden');
+    }
     return;
   }
   
