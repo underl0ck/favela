@@ -208,7 +208,7 @@ const errorDiv = document.getElementById('form-error') as HTMLDivElement;
 const successDiv = document.getElementById('form-success') as HTMLDivElement;
 const submitButton = document.getElementById('submit-button') as HTMLButtonElement;
 const motivationTextarea = document.getElementById('motivation') as HTMLTextAreaElement;
-const motivationLength = document.getElementById('motivation-length') as HTMLSpanElement;
+const messageLength = document.getElementById('message-length') as HTMLSpanElement;
 
 // Name validation function
 function validateName(name: string): boolean {
@@ -223,14 +223,14 @@ motivationTextarea?.addEventListener('input', () => {
   clearTimeout(timeoutId);
   timeoutId = setTimeout(() => {
     const length = motivationTextarea.value.length;
-    if (motivationLength) {
-      motivationLength.textContent = length.toString();
+    if (messageLength) {
+      messageLength.textContent = length.toString();
     }
     
     if (length > 1000) {
       motivationTextarea.value = motivationTextarea.value.slice(0, 1000);
-      if (motivationLength) {
-        motivationLength.textContent = '1000';
+      if (messageLength) {
+        messageLength.textContent = '1000';
       }
     }
   }, 100);
@@ -248,7 +248,7 @@ form?.querySelectorAll('input, textarea, select').forEach(element => {
   });
 });
 
-// Form submission with retry logic
+// Form submission with retry logic and proper error handling
 async function submitForm(data: any, retries = 3): Promise<Response> {
   try {
     const response = await fetch('/api/contact', {
@@ -260,12 +260,22 @@ async function submitForm(data: any, retries = 3): Promise<Response> {
       body: JSON.stringify(data)
     });
     
-    if (!response.ok && retries > 0 && response.status >= 500) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return submitForm(data, retries - 1);
+    // Try to parse JSON response
+    try {
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.error || 'Erro ao enviar formulário');
+        }
+        return response;
+      } else {
+        throw new Error('Resposta inválida do servidor');
+      }
+    } catch (parseError) {
+      console.error('Error parsing response:', parseError);
+      throw new Error('Erro ao processar resposta do servidor');
     }
-    
-    return response;
   } catch (error) {
     if (retries > 0) {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -302,7 +312,7 @@ form?.addEventListener('submit', async (e) => {
   }
 
   // Validate age
-  if (age < 16 || age > 100) {
+  if (isNaN(age) || age < 16 || age > 100) {
     const ageError = form.querySelector('[data-error="age"]');
     if (ageError) {
       ageError.textContent = 'Idade deve estar entre 16 e 100 anos';
@@ -332,7 +342,7 @@ Motivação: ${formData.get('motivation')}
     const response = await submitForm(data);
     const result = await response.json();
     
-    if (!response.ok || !result.success) {
+    if (!result.success) {
       throw new Error(result.error || 'Erro ao enviar inscrição');
     }
 
