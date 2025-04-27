@@ -1,20 +1,6 @@
 import { Resend } from 'resend';
 import { z } from 'zod';
 
-// Initialize Resend with API key
-let resend: Resend;
-try {
-  const apiKey = import.meta.env.RESEND_API_KEY;
-  if (!apiKey) {
-    throw new Error('RESEND_API_KEY environment variable is not set');
-  }
-  resend = new Resend(apiKey);
-} catch (error) {
-  console.error('Failed to initialize Resend:', error);
-  // Initialize with a dummy key to prevent constructor error
-  resend = new Resend('dummy_key');
-}
-
 export const ContactFormSchema = z.object({
   name: z.string().min(2, 'Nome muito curto').max(100, 'Nome muito longo'),
   email: z.string().email('Email inválido').max(100, 'Email muito longo'),
@@ -108,10 +94,17 @@ function generateAutoReplyHTML(name: string) {
 
 export async function sendContactEmail(data: ContactForm) {
   try {
-    // Check if Resend API key is configured
-    if (!import.meta.env.RESEND_API_KEY) {
-      throw new Error('RESEND_API_KEY environment variable is not set');
+    const apiKey = import.meta.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.error('RESEND_API_KEY is not set in environment variables');
+      return { 
+        success: false, 
+        error: 'Configuração de email não encontrada. Por favor, tente novamente mais tarde.' 
+      };
     }
+
+    // Initialize Resend with API key
+    const resend = new Resend(apiKey);
 
     const { name, email, subject } = data;
     const domain = import.meta.env.RESEND_DOMAIN || 'favelahacker.com.br';
