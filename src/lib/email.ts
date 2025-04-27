@@ -2,7 +2,18 @@ import { Resend } from 'resend';
 import { z } from 'zod';
 
 // Initialize Resend with API key
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
+let resend: Resend;
+try {
+  const apiKey = import.meta.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY environment variable is not set');
+  }
+  resend = new Resend(apiKey);
+} catch (error) {
+  console.error('Failed to initialize Resend:', error);
+  // Initialize with a dummy key to prevent constructor error
+  resend = new Resend('dummy_key');
+}
 
 export const ContactFormSchema = z.object({
   name: z.string().min(2, 'Nome muito curto').max(100, 'Nome muito longo'),
@@ -99,11 +110,7 @@ export async function sendContactEmail(data: ContactForm) {
   try {
     // Check if Resend API key is configured
     if (!import.meta.env.RESEND_API_KEY) {
-      console.error('Resend API key not configured');
-      return { 
-        success: false, 
-        error: 'Serviço de email não configurado. Por favor, tente novamente mais tarde.' 
-      };
+      throw new Error('RESEND_API_KEY environment variable is not set');
     }
 
     const { name, email, subject } = data;
