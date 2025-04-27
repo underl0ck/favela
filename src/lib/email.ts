@@ -106,13 +106,16 @@ export async function sendContactEmail(data: ContactForm, url: URL, env: Record<
 
     const resend = new Resend(apiKey);
     const { name, email, subject } = data;
-    const domain = env.RESEND_DOMAIN || url.hostname || 'favelahacker.com.br';
+    
+    // Always use favelahacker.com.br domain
+    const domain = 'favelahacker.com.br';
     const fromEmail = `Favela Hacker <contato@${domain}>`;
+    const toEmail = `contato@${domain}`;
     
     // Send notification to admin
     await resend.emails.send({
       from: fromEmail,
-      to: [`contato@${domain}`],
+      to: [toEmail],
       reply_to: email,
       subject: `Novo contato: ${getSubjectLabel(subject)}`,
       html: generateEmailHTML(data),
