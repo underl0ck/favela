@@ -7,10 +7,12 @@ import xss from 'xss';
 export const POST: APIRoute = async ({ request }) => {
   const headers = {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': request.headers.get('Origin') || '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-CSRF-Token',
-    'Access-Control-Max-Age': '86400' // 24 hours
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400', // 24 hours
+    'Vary': 'Origin'
   };
 
   // Handle preflight requests
@@ -19,27 +21,35 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
+    // Log request details for debugging
+    console.log('Request headers:', Object.fromEntries(request.headers.entries()));
+    console.log('Request URL:', request.url);
+
     // Validate CSRF token
     const token = request.headers.get('X-CSRF-Token');
     const origin = request.headers.get('Origin');
     
+    console.log('CSRF validation:', { token, origin });
+
     if (!validateCSRFToken(token, origin)) {
       console.error('CSRF validation failed:', { token, origin });
       return new Response(
         JSON.stringify({ 
           success: false, 
           error: 'Invalid CSRF token',
-          csrfToken: generateCSRFToken() // Generate new token for retry
+          csrfToken: generateCSRFToken()
         }), 
         { status: 403, headers }
       );
     }
 
     // Get client IP from request headers
-    const forwardedFor = request.headers.get('x-forwarded-for');
-    const clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : request.headers.get('x-real-ip') || '127.0.0.1';
+    const forwardedFor = request.headers.get('cf-connecting-ip') || 
+                        request.headers.get('x-forwarded-for') ||
+                        request.headers.get('x-real-ip');
+    const clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : '127.0.0.1';
     
-    // Check rate limit using the forwarded IP
+    // Check rate limit
     const rateLimit = await checkRateLimit(clientIp);
     if (!rateLimit.allowed) {
       return new Response(
@@ -56,10 +66,10 @@ export const POST: APIRoute = async ({ request }) => {
     
     // Sanitize input data
     const sanitizedData = {
-      name: xss(data.name),
-      email: xss(data.email),
-      subject: xss(data.subject),
-      message: xss(data.message)
+      name: xss(data.name || ''),
+      email: xss(data.email || ''),
+      subject: xss(data.subject || ''),
+      message: xss(data.message || '')
     };
     
     // Validate sanitized data
@@ -82,7 +92,7 @@ export const POST: APIRoute = async ({ request }) => {
       JSON.stringify({ 
         success: true,
         message: 'Email enviado com sucesso',
-        csrfToken: generateCSRFToken() // Generate new token for next request
+        csrfToken: generateCSRFToken()
       }), 
       { status: 200, headers }
     );
@@ -103,7 +113,7 @@ export const POST: APIRoute = async ({ request }) => {
       JSON.stringify({ 
         success: false,
         error: errorMessage,
-        csrfToken: generateCSRFToken() // Generate new token for retry
+        csrfToken: generateCSRFToken()
       }), 
       { status: statusCode, headers }
     );
