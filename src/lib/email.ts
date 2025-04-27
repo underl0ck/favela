@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
 import { z } from 'zod';
 
+// Initialize Resend with API key
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
 export const ContactFormSchema = z.object({
@@ -108,12 +109,22 @@ function generateAutoReplyHTML(name: string) {
 
 export async function sendContactEmail(data: ContactForm) {
   try {
+    // Check if Resend API key is configured
+    if (!import.meta.env.RESEND_API_KEY) {
+      console.error('Resend API key not configured');
+      return { 
+        success: false, 
+        error: 'Serviço de email não configurado. Por favor, tente novamente mais tarde.' 
+      };
+    }
+
     const { name, email, subject } = data;
     const domain = import.meta.env.RESEND_DOMAIN || 'favelahacker.com.br';
+    const fromEmail = `Favela Hacker <contato@${domain}>`;
     
     // Send notification to admin
     await resend.emails.send({
-      from: `Favela Hacker <contato@${domain}>`,
+      from: fromEmail,
       to: [`contato@${domain}`],
       reply_to: email,
       subject: `Novo contato: ${getSubjectLabel(subject)}`,
@@ -128,7 +139,7 @@ Mensagem: ${data.message}
 
     // Send auto-reply to user
     await resend.emails.send({
-      from: `Favela Hacker <contato@${domain}>`,
+      from: fromEmail,
       to: [email],
       subject: 'Recebemos sua mensagem - Favela Hacker',
       html: generateAutoReplyHTML(name),
@@ -151,6 +162,9 @@ Equipe Favela Hacker
     return { success: true };
   } catch (error) {
     console.error('Error sending email:', error);
-    return { success: false, error: 'Erro ao enviar email' };
+    return { 
+      success: false, 
+      error: 'Erro ao enviar email. Por favor, tente novamente mais tarde.' 
+    };
   }
 }
