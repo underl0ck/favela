@@ -39,6 +39,7 @@ export function validateCSRFToken(token: string | null, origin: string | null): 
       '127.0.0.1',
       'stackblitz.com',
       'webcontainer.io',
+      'favelahacker.com',
       'favelahacker.com.br',
       'pages.dev',
       'cloudflare.com',
