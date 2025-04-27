@@ -21,16 +21,22 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    // Verify Resend API key is configured
+    // Check if Resend API key is configured
     if (!import.meta.env.RESEND_API_KEY) {
-      console.error('Resend API key not configured');
+      console.error('Resend API key not configured in environment');
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: 'Service temporarily unavailable. Please try again later.',
+          error: 'Email service is not configured. Please try again later.',
           csrfToken: await generateCSRFToken()
         }), 
-        { status: 503, headers }
+        { 
+          status: 503, 
+          headers: {
+            ...headers,
+            'Retry-After': '3600' // Try again in 1 hour
+          }
+        }
       );
     }
 
@@ -67,7 +73,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: 'Invalid request token',
+          error: 'Invalid security token. Please refresh the page and try again.',
           csrfToken: await generateCSRFToken()
         }), 
         { status: 403, headers }
@@ -105,7 +111,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: 'Invalid form data',
+          error: 'Please check your input and try again',
           csrfToken: await generateCSRFToken()
         }), 
         { status: 400, headers }
@@ -119,7 +125,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ 
           success: false,
-          error: result.error || 'Failed to send email',
+          error: result.error || 'Failed to send email. Please try again later.',
           csrfToken: await generateCSRFToken()
         }), 
         { status: 500, headers }
@@ -129,7 +135,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: 'Email sent successfully',
+        message: 'Message sent successfully!',
         csrfToken: await generateCSRFToken()
       }), 
       { status: 200, headers }
@@ -141,7 +147,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({ 
         success: false,
-        error: 'An unexpected error occurred',
+        error: 'An unexpected error occurred. Please try again later.',
         csrfToken: await generateCSRFToken()
       }), 
       { status: 500, headers }
