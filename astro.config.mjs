@@ -17,7 +17,7 @@ import tailwind from '@astrojs/tailwind';
 import cloudflare from '@astrojs/cloudflare'; // <-- Add this line
 
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://favelahacker.com.br',
   integrations: [mdx(), sitemap(), tailwind()],
   output: 'server', // Enable server-side rendering
   adapter: cloudflare(), // <-- Add this line
