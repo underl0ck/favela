@@ -61,10 +61,13 @@ export const POST: APIRoute = async ({ request, clientAddress, url, locals }) =>
       );
     }
 
+    // Clone the request before reading the body
+    const clonedRequest = request.clone();
+    
     // Parse and validate request body
     let data;
     try {
-      data = await request.json();
+      data = await clonedRequest.json();
     } catch (e) {
       return new Response(
         JSON.stringify({ 
