@@ -1,15 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
-import Image from '../components/Image.astro';
+import { Image } from 'astro:assets';
 
 const responsibilities = [
   'Mentorar alunos semanalmente',
   'Compartilhar experiências práticas',
   'Ajudar no desenvolvimento técnico',
   'Orientar sobre carreira',
-  'Participar de workshops',
-  'Avaliar projetos práticos'
+  'Participar de workshops'
 ];
 
 const requirements = [
@@ -17,8 +16,7 @@ const requirements = [
   'Disponibilidade de 4h semanais',
   'Comprometimento mínimo de 6 meses',
   'Boa comunicação',
-  'Vontade de ensinar',
-  'Alinhamento com nossos valores'
+  'Vontade de ensinar'
 ];
 
 const benefits = [
@@ -26,8 +24,7 @@ const benefits = [
   'Networking com outros mentores',
   'Desenvolvimento de liderança',
   'Reconhecimento da comunidade',
-  'Certificado de mentoria',
-  'Participação em eventos'
+  'Certificado de mentoria'
 ];
 ---
 
@@ -38,14 +35,18 @@ const benefits = [
   <div class="max-w-4xl mx-auto">
     <Image
       src="https://images.pexels.com/photos/5896659/pexels-photo-5896659.jpeg"
-      alt="Estudantes do Favela Hacker aprendendo tecnologia"
-      className="w-full h-96 object-cover rounded-lg mb-8"
+      alt="Mentoria em tecnologia"
+      width={1200}
+      height={600}
+      class="w-full h-96 object-cover rounded-lg mb-8"
+      loading="eager"
+      decoding="sync"
     />
     
     <h1 class="text-4xl font-mono text-terminal-green mb-8">Quero Ensinar</h1>
     
     <div class="grid md:grid-cols-3 gap-8 mb-12">
-      <Card title="Responsabilidades">
+      <Card title="O que você fará">
         <ul class="space-y-2">
           {responsibilities.map(item => (
             <li>• {item}</li>
@@ -53,7 +54,7 @@ const benefits = [
         </ul>
       </Card>
 
-      <Card title="Requisitos">
+      <Card title="O que precisamos">
         <ul class="space-y-2">
           {requirements.map(item => (
             <li>• {item}</li>
@@ -61,7 +62,7 @@ const benefits = [
         </ul>
       </Card>
 
-      <Card title="Benefícios">
+      <Card title="O que oferecemos">
         <ul class="space-y-2">
           {benefits.map(item => (
             <li>• {item}</li>
@@ -70,7 +71,7 @@ const benefits = [
       </Card>
     </div>
 
-    <Card title="Seja Mentor" className="mb-12">
+    <Card title="Candidate-se" className="mb-12">
       <form id="mentor-form" class="space-y-6">
         <div>
           <label class="block text-terminal-green font-mono mb-2" for="name">
@@ -83,11 +84,9 @@ const benefits = [
             required
             minlength="2"
             maxlength="100"
-            pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+"
             class="form-input"
             placeholder="Seu nome completo"
           />
-          <span class="text-red-500 text-sm hidden" data-error="name"></span>
         </div>
 
         <div>
@@ -103,23 +102,6 @@ const benefits = [
             class="form-input"
             placeholder="seu@email.com"
           />
-          <span class="text-red-500 text-sm hidden" data-error="email"></span>
-        </div>
-
-        <div>
-          <label class="block text-terminal-green font-mono mb-2" for="linkedin">
-            LinkedIn
-          </label>
-          <input
-            type="url"
-            id="linkedin"
-            name="linkedin"
-            required
-            pattern="https:\/\/[a-z]{2,3}\.linkedin\.com\/.*"
-            class="form-input"
-            placeholder="https://linkedin.com/in/seu-perfil"
-          />
-          <span class="text-red-500 text-sm hidden" data-error="linkedin"></span>
         </div>
 
         <div>
@@ -135,7 +117,6 @@ const benefits = [
             <option value="appsec">Segurança de Aplicações</option>
             <option value="outro">Outro</option>
           </select>
-          <span class="text-red-500 text-sm hidden" data-error="expertise"></span>
         </div>
 
         <div>
@@ -151,7 +132,6 @@ const benefits = [
             max="50"
             class="form-input"
           />
-          <span class="text-red-500 text-sm hidden" data-error="experience"></span>
         </div>
 
         <div>
@@ -167,7 +147,6 @@ const benefits = [
             class="form-input form-textarea"
             placeholder="Conte-nos sua motivação"
           ></textarea>
-          <span class="text-red-500 text-sm hidden" data-error="motivation"></span>
           <div class="text-sm text-terminal-green mt-1">
             <span id="motivation-length">0</span>/1000 caracteres
           </div>
@@ -234,10 +213,6 @@ form?.addEventListener('submit', async (e) => {
   // Reset messages
   errorDiv.classList.add('hidden');
   successDiv.classList.add('hidden');
-  form.querySelectorAll('[data-error]').forEach(el => {
-    el.textContent = '';
-    el.classList.add('hidden');
-  });
   
   // Disable submit button
   submitButton.disabled = true;
@@ -252,7 +227,6 @@ form?.addEventListener('submit', async (e) => {
       message: `
 Nome: ${formData.get('name')}
 Email: ${formData.get('email')}
-LinkedIn: ${formData.get('linkedin')}
 Área de Expertise: ${formData.get('expertise')}
 Anos de Experiência: ${formData.get('experience')}
 Motivação: ${formData.get('motivation')}
