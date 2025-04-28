@@ -212,7 +212,6 @@ const messageLength = document.getElementById('message-length') as HTMLSpanEleme
 
 // Name validation function
 function validateName(name: string): boolean {
-  // Allow letters, spaces, and accented characters
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s']+$/;
   return nameRegex.test(name) && name.length >= 2 && name.length <= 100;
 }
@@ -247,43 +246,6 @@ form?.querySelectorAll('input, textarea, select').forEach(element => {
     errorDiv.classList.add('hidden');
   });
 });
-
-// Form submission with retry logic and proper error handling
-async function submitForm(data: any, retries = 3): Promise<Response> {
-  try {
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': form.dataset.csrfToken || ''
-      },
-      body: JSON.stringify(data)
-    });
-    
-    // Try to parse JSON response
-    try {
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        const result = await response.json();
-        if (!response.ok) {
-          throw new Error(result.error || 'Erro ao enviar formulário');
-        }
-        return response;
-      } else {
-        throw new Error('Resposta inválida do servidor');
-      }
-    } catch (parseError) {
-      console.error('Error parsing response:', parseError);
-      throw new Error('Erro ao processar resposta do servidor');
-    }
-  } catch (error) {
-    if (retries > 0) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return submitForm(data, retries - 1);
-    }
-    throw error;
-  }
-}
 
 form?.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -338,10 +300,18 @@ Comunidade: ${formData.get('community')}
 Motivação: ${formData.get('motivation')}
       `.trim()
     };
-    
-    const response = await submitForm(data);
+
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': form.dataset.csrfToken || ''
+      },
+      body: JSON.stringify(data)
+    });
+
     const result = await response.json();
-    
+
     if (!result.success) {
       throw new Error(result.error || 'Erro ao enviar inscrição');
     }
@@ -356,14 +326,9 @@ Motivação: ${formData.get('motivation')}
     
   } catch (error) {
     console.error('Form submission error:', error);
-    let errorMessage = 'Erro ao enviar inscrição';
-    
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
     
     // Display the error message
-    errorDiv.textContent = errorMessage;
+    errorDiv.textContent = error instanceof Error ? error.message : 'Erro ao enviar inscrição';
     errorDiv.classList.remove('hidden');
     
   } finally {
