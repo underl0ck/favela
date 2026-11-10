@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import { Image } from 'astro:assets';
-import { generateCSRFToken } from '../lib/csrf';
 
 const contactInfo = [
   {
@@ -28,8 +27,6 @@ const socialLinks = [
   { name: 'Instagram', url: 'https://instagram.com/favelahacker_' }
 ];
 
-// Generate initial CSRF token
-const csrfToken = await generateCSRFToken();
 ---
 
 <Layout
@@ -59,7 +56,7 @@ const csrfToken = await generateCSRFToken();
       ))}
     </div>
 
-    <form id="contact-form" class="space-y-6" data-csrf-token={csrfToken}>
+    <form id="contact-form" action="#" class="space-y-6">
       <div>
         <label class="block text-terminal-green font-mono mb-2" for="name">
           Nome
@@ -159,8 +156,6 @@ const csrfToken = await generateCSRFToken();
 <script>
 const form = document.getElementById('contact-form') as HTMLFormElement;
 const errorDiv = document.getElementById('form-error') as HTMLDivElement;
-const successDiv = document.getElementById('form-success') as HTMLDivElement;
-const submitButton = document.getElementById('submit-button') as HTMLButtonElement;
 const messageTextarea = document.getElementById('message') as HTMLTextAreaElement;
 const messageLengthDisplay = document.getElementById('message-length') as HTMLSpanElement;
 
@@ -191,69 +186,7 @@ form?.querySelectorAll('input, textarea, select').forEach(element => {
   });
 });
 
-form?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  // Reset messages
-  errorDiv.classList.add('hidden');
-  successDiv.classList.add('hidden');
-  form.querySelectorAll('[data-error]').forEach(el => {
-    el.textContent = '';
-    el.classList.add('hidden');
-  });
-  
-  // Disable submit button
-  submitButton.disabled = true;
-  submitButton.textContent = 'Enviando...';
-  
-  try {
-    const formData = new FormData(form);
-    const data = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      subject: formData.get('subject'),
-      message: formData.get('message')
-    };
-    
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': form.dataset.csrfToken || ''
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-    
-    if (!response.ok || !result.success) {
-      throw new Error(result.error || 'Erro ao enviar mensagem');
-    }
-
-    // Update CSRF token for next request
-    if (result.csrfToken) {
-      form.dataset.csrfToken = result.csrfToken;
-    }
-    
-    // Redirect to success page
-    window.location.href = '/contato/sucesso';
-    
-  } catch (error) {
-    console.error('Form submission error:', error);
-    let errorMessage = 'Erro ao enviar mensagem';
-    
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-    
-    // Display the error message
-    errorDiv.textContent = errorMessage;
-    errorDiv.classList.remove('hidden');
-    
-  } finally {
-    // Re-enable submit button
-    submitButton.disabled = false;
-    submitButton.textContent = 'Enviar Mensagem';
-  }
+form?.addEventListener('submit', (event) => {
+  event.preventDefault();
 });
 </script>

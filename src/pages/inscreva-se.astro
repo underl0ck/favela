@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import { Image } from 'astro:assets';
-import { generateCSRFToken } from '../lib/csrf';
 
 const benefits = [
   'Curso gratuito de 6 meses',
@@ -40,8 +39,6 @@ const process = [
   }
 ];
 
-// Generate initial CSRF token
-const csrfToken = await generateCSRFToken();
 ---
 
 <Layout
@@ -91,7 +88,7 @@ const csrfToken = await generateCSRFToken();
     </section>
 
     <Card title="Inscreva-se" className="mb-12">
-      <form id="enrollment-form" class="space-y-6" data-csrf-token={csrfToken}>
+      <form id="enrollment-form" class="space-y-6">
         <div>
           <label class="block text-terminal-green font-mono mb-2" for="name">
             Nome Completo
@@ -304,8 +301,7 @@ Motivação: ${formData.get('motivation')}
     const response = await fetch('/api/contact', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': form.dataset.csrfToken || ''
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
     });
@@ -316,11 +312,6 @@ Motivação: ${formData.get('motivation')}
       throw new Error(result.error || 'Erro ao enviar inscrição');
     }
 
-    // Update CSRF token for next request
-    if (result.csrfToken) {
-      form.dataset.csrfToken = result.csrfToken;
-    }
-    
     // Redirect to success page
     window.location.href = '/contato/sucesso';
     
