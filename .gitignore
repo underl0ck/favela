@@ -24,3 +24,5 @@ pnpm-debug.log*
 .idea/
 audit.sh
 favela-audit-*.txt
+.dev.vars
+.wrangler/

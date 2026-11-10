@@ -3,5 +3,11 @@
   "name": "favela-eqw",
   "compatibility_date": "2025-01-01",
   "pages_build_output_dir": "./dist",
-  "compatibility_flags": ["nodejs_compat"]
+  "compatibility_flags": ["nodejs_compat"],
+  "kv_namespaces": [
+    {
+      "binding": "FAVELA_KV",
+      "id": "00000000000000000000000000000000"
+    }
+  ]
 }

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+import ContactForm from '../components/ContactForm.astro';
 import { Image } from 'astro:assets';
 
 const benefits = [
@@ -9,7 +10,7 @@ const benefits = [
   'Projetos práticos',
   'Networking com profissionais',
   'Preparação para certificações',
-  'Oportunidades de emprego'
+  'Oportunidades de emprego',
 ];
 
 const requirements = [
@@ -18,27 +19,26 @@ const requirements = [
   'Comprometimento com os estudos',
   'Disponibilidade de 15h semanais',
   'Interesse por tecnologia',
-  'Residir em comunidade'
+  'Residir em comunidade',
 ];
 
 const process = [
   {
     step: '1',
     title: 'Inscrição',
-    description: 'Preencha o formulário de interesse'
+    description: 'Preencha o formulário de interesse',
   },
   {
     step: '2',
     title: 'Seleção',
-    description: 'Processo seletivo com teste básico e entrevista'
+    description: 'Processo seletivo com teste básico e entrevista',
   },
   {
     step: '3',
     title: 'Início',
-    description: 'Começo das aulas na próxima turma'
-  }
+    description: 'Começo das aulas na próxima turma',
+  },
 ];
-
 ---
 
 <Layout
@@ -55,13 +55,13 @@ const process = [
       loading="eager"
       decoding="sync"
     />
-    
+
     <h1 class="text-4xl font-mono text-terminal-green mb-8">Quero Aprender</h1>
-    
+
     <div class="grid md:grid-cols-2 gap-8 mb-12">
       <Card title="Benefícios">
         <ul class="space-y-2">
-          {benefits.map(benefit => (
+          {benefits.map((benefit) => (
             <li>• {benefit}</li>
           ))}
         </ul>
@@ -69,7 +69,7 @@ const process = [
 
       <Card title="Requisitos">
         <ul class="space-y-2">
-          {requirements.map(requirement => (
+          {requirements.map((requirement) => (
             <li>• {requirement}</li>
           ))}
         </ul>
@@ -88,249 +88,55 @@ const process = [
     </section>
 
     <Card title="Inscreva-se" className="mb-12">
-      <form id="enrollment-form" class="space-y-6">
-        <div>
-          <label class="block text-terminal-green font-mono mb-2" for="name">
-            Nome Completo
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            minlength="2"
-            maxlength="100"
-            class="form-input"
-            placeholder="Seu nome completo"
-            autocomplete="name"
-          />
-          <span class="text-red-500 text-sm hidden" data-error="name"></span>
-        </div>
+      <ContactForm
+        subject="aluno"
+        messageLabel="Por que você quer participar do programa?"
+        messagePlaceholder="Conte-nos sua motivação"
+        submitLabel="Enviar Inscrição"
+      >
+        <div slot="fields" class="space-y-6">
+          <div>
+            <label class="block text-terminal-green font-mono mb-2" for="enrollment-age">Idade</label>
+            <input
+              type="number"
+              id="enrollment-age"
+              name="age"
+              required
+              min="16"
+              max="100"
+              class="form-input"
+              autocomplete="off"
+            />
+          </div>
 
-        <div>
-          <label class="block text-terminal-green font-mono mb-2" for="email">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            maxlength="100"
-            class="form-input"
-            placeholder="seu@email.com"
-            autocomplete="email"
-          />
-          <span class="text-red-500 text-sm hidden" data-error="email"></span>
-        </div>
-
-        <div>
-          <label class="block text-terminal-green font-mono mb-2" for="age">
-            Idade
-          </label>
-          <input
-            type="number"
-            id="age"
-            name="age"
-            required
-            min="16"
-            max="100"
-            class="form-input"
-            autocomplete="off"
-          />
-          <span class="text-red-500 text-sm hidden" data-error="age"></span>
-        </div>
-
-        <div>
-          <label class="block text-terminal-green font-mono mb-2" for="community">
-            Comunidade onde reside
-          </label>
-          <input
-            type="text"
-            id="community"
-            name="community"
-            required
-            minlength="2"
-            maxlength="100"
-            class="form-input"
-            placeholder="Nome da sua comunidade"
-            autocomplete="address-level2"
-          />
-          <span class="text-red-500 text-sm hidden" data-error="community"></span>
-        </div>
-
-        <div>
-          <label class="block text-terminal-green font-mono mb-2" for="motivation">
-            Por que você quer participar do programa?
-          </label>
-          <textarea
-            id="motivation"
-            name="motivation"
-            required
-            minlength="10"
-            maxlength="1000"
-            class="form-input form-textarea"
-            placeholder="Conte-nos sua motivação"
-            autocomplete="off"
-          ></textarea>
-          <span class="text-red-500 text-sm hidden" data-error="motivation"></span>
-          <div class="text-sm text-terminal-green mt-1">
-            <span id="message-length">0</span>/1000 caracteres
+          <div>
+            <label class="block text-terminal-green font-mono mb-2" for="enrollment-community">
+              Comunidade onde reside
+            </label>
+            <input
+              type="text"
+              id="enrollment-community"
+              name="community"
+              required
+              minlength="2"
+              maxlength="100"
+              class="form-input"
+              placeholder="Nome da sua comunidade"
+              autocomplete="address-level2"
+            />
           </div>
         </div>
-
-        <div id="form-error" class="text-red-500 hidden"></div>
-        <div id="form-success" class="text-terminal-green hidden"></div>
-
-        <div>
-          <button type="submit" class="button" id="submit-button">
-            Enviar Inscrição
-          </button>
-        </div>
-      </form>
+      </ContactForm>
     </Card>
 
     <div class="text-center">
       <p class="text-lg mb-4">Tem alguma dúvida?</p>
-      <a href="/contato" class="button bg-transparent border-2 border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-terminal-bg">
+      <a
+        href="/contato"
+        class="button bg-transparent border-2 border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-terminal-bg"
+      >
         Entre em Contato
       </a>
     </div>
   </div>
 </Layout>
-
-<script>
-const form = document.getElementById('enrollment-form') as HTMLFormElement;
-const errorDiv = document.getElementById('form-error') as HTMLDivElement;
-const successDiv = document.getElementById('form-success') as HTMLDivElement;
-const submitButton = document.getElementById('submit-button') as HTMLButtonElement;
-const motivationTextarea = document.getElementById('motivation') as HTMLTextAreaElement;
-const messageLength = document.getElementById('message-length') as HTMLSpanElement;
-
-// Name validation function
-function validateName(name: string): boolean {
-  const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s']+$/;
-  return nameRegex.test(name) && name.length >= 2 && name.length <= 100;
-}
-
-// Character counter with debounce
-let timeoutId: ReturnType<typeof setTimeout>;
-motivationTextarea?.addEventListener('input', () => {
-  clearTimeout(timeoutId);
-  timeoutId = setTimeout(() => {
-    const length = motivationTextarea.value.length;
-    if (messageLength) {
-      messageLength.textContent = length.toString();
-    }
-    
-    if (length > 1000) {
-      motivationTextarea.value = motivationTextarea.value.slice(0, 1000);
-      if (messageLength) {
-        messageLength.textContent = '1000';
-      }
-    }
-  }, 100);
-});
-
-// Clear error message when user starts typing
-form?.querySelectorAll('input, textarea, select').forEach(element => {
-  element.addEventListener('input', () => {
-    const errorSpan = form.querySelector(`[data-error="${element.id}"]`);
-    if (errorSpan) {
-      errorSpan.textContent = '';
-      errorSpan.classList.add('hidden');
-    }
-    errorDiv.classList.add('hidden');
-  });
-});
-
-form?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  // Reset messages
-  errorDiv.classList.add('hidden');
-  successDiv.classList.add('hidden');
-  form.querySelectorAll('[data-error]').forEach(el => {
-    el.textContent = '';
-    el.classList.add('hidden');
-  });
-  
-  // Basic client-side validation
-  const formData = new FormData(form);
-  const name = formData.get('name') as string;
-  const age = parseInt(formData.get('age') as string);
-
-  // Validate name
-  if (!validateName(name)) {
-    const nameError = form.querySelector('[data-error="name"]');
-    if (nameError) {
-      nameError.textContent = 'Nome deve conter apenas letras e espaços';
-      nameError.classList.remove('hidden');
-    }
-    return;
-  }
-
-  // Validate age
-  if (isNaN(age) || age < 16 || age > 100) {
-    const ageError = form.querySelector('[data-error="age"]');
-    if (ageError) {
-      ageError.textContent = 'Idade deve estar entre 16 e 100 anos';
-      ageError.classList.remove('hidden');
-    }
-    return;
-  }
-  
-  // Disable submit button and show loading state
-  submitButton.disabled = true;
-  submitButton.innerHTML = '<span class="animate-pulse">Enviando...</span>';
-  
-  try {
-    const data = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      subject: 'aluno',
-      message: `
-Nome: ${formData.get('name')}
-Email: ${formData.get('email')}
-Idade: ${formData.get('age')}
-Comunidade: ${formData.get('community')}
-Motivação: ${formData.get('motivation')}
-      `.trim()
-    };
-
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-
-    const result = await response.json();
-
-    if (!result.success) {
-      throw new Error(result.error || 'Erro ao enviar inscrição');
-    }
-
-    // Redirect to success page
-    window.location.href = '/contato/sucesso';
-    
-  } catch (error) {
-    console.error('Form submission error:', error);
-    
-    // Display the error message
-    errorDiv.textContent = error instanceof Error ? error.message : 'Erro ao enviar inscrição';
-    errorDiv.classList.remove('hidden');
-    
-  } finally {
-    // Re-enable submit button
-    submitButton.disabled = false;
-    submitButton.textContent = 'Enviar Inscrição';
-  }
-});
-
-// Cleanup on page unload
-window.addEventListener('unload', () => {
-  clearTimeout(timeoutId);
-});
-</script>
