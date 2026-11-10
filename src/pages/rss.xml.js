@@ -7,7 +7,7 @@ export async function GET(context) {
 	return rss({
 		title: SITE_TITLE,
 		description: SITE_DESCRIPTION,
-		site: context.site,
+		site: import.meta.env.SITE || 'https://favelahacker.com.br',
 		items: posts.map((post) => ({
 			...post.data,
 			link: `/blog/${post.id}/`,
